@@ -85,7 +85,9 @@ def my_files(vp_info):
     if not os.path.isdir(files["resdir"]):
         os.makedirs(files["resdir"])
 
-    files["resfile"] = files["expname"] + "_" + str(vp_info["vp_num"]) + ".res"
+    files["resfile"] = files["resdir"] + os.sep + files["expname"] + "_" + str(vp_info["vp_num"]) + ".res"
+
+    print(files["resfile"])
 
     if os.path.isfile(files["resfile"]):
         askUser = None

@@ -105,12 +105,12 @@ fix_stim = visual.ShapeStim(
 )
 
 dots_stim = visual.DotStim(
-    win, dotSize=20, coherence=1, dotLife=-1, speed=1, units="pix", fieldSize=win.size,
+    win, dotSize=20, coherence=1, dotLife=-1, speed=1, units="pix", fieldSize=win.size/2,
     nDots = int(parameters["ndots"]*parameters["proportions"]["small"])
 )
 dots_dist = visual.DotStim(
     win, dotSize=20, coherence=1, dotLife=-1, speed=1, units="pix",
-    fieldSize=win.size, nDots = int(parameters["ndots"]-dots_stim.nDots)
+    fieldSize=win.size/2, nDots = int(parameters["ndots"]-dots_stim.nDots)
 )
 
 ########################
