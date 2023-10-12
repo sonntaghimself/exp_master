@@ -1,0 +1,20 @@
+Hello,
+
+Thank you for participating in this experiment.
+
+You will have to complete several blocks containing trials with colored dots
+that move in different directions. Your task is to react to either the color of
+the majority of all dots, or the direction the dots are moving in. Please answer
+with your left and right index finger, by pressing the buttons S & L.
+
+At the beginning of each trial, there will be an indication of which task you
+have to do, followed by a fixation cross.
+
+For the color task, please respond with {} to the color {} and with {} to the
+color {}.
+
+For the movement task, please respond with {} if the majority of all dots are
+moving to the left and with {} if the majority of all dots are moving to the
+right.
+
+to continue please click {}.
