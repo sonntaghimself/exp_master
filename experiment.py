@@ -116,9 +116,6 @@ dots_dist = visual.DotStim(
 ########################
 #   result variable    #
 ########################
-# NOTE: this will also be a list of dictionaries with a dictionary for each
-# trial.
-
 for blk in exp:
     blk = [x for x in blk if x] # making sure no faulty values are passed through
 
