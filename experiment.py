@@ -209,14 +209,7 @@ dataDF = dataDF.from_dict(tmp_data)
 dataDF.to_csv(files["resfile"], header=True, index=False, sep=",", mode="w")
 
 
-if vp_info["gender"] == "male":
-    address = " dude !!"
-else:
-    address = " you are awesome !!!"
-
-end_text = "The Experiment is done, thank you so much for participating{}".format(
-    address
-)
+end_text = "The Experiment is done, thank you for participating"
 
 end_text = end_text + "\n\n may the force be with you."
 
