@@ -154,7 +154,7 @@ for blk in exp:
             keys = []
             keys = event.getKeys()
             if keys:
-                rt = core.getTime()
+                rt = timer.getTime()
                 if trl["cor_resp"] in keys:
                    corr = 1
                    fb_stim.text = "Correct"
@@ -164,7 +164,7 @@ for blk in exp:
                 trl_complete = True
 
             if frames >= parameters["time"]["pres"]:
-                rt = core.getTime()
+                rt = timer.getTime()
                 fb_stim.text = "Too slow"
                 trl_complete = True
                 corr = 0
@@ -189,7 +189,7 @@ for blk in exp:
     corr = [x["corr"] for x in blk]
     blk_per = (corr.count(1) / num_trls) * 100
 
-    fb_txt = "Block {}, \n Correct: {}%".format(blk_num, blk_per)
+    fb_txt = "Block {} of {}, \n Correct: {}%".format(blk_num, len(exp), blk_per)
     fb_txt = fb_txt + "\n\nPress the spacebar to continue."
     fb_stim.text = fb_txt
     fb_stim.draw()
