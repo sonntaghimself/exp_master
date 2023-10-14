@@ -114,7 +114,7 @@ dots_dist = visual.DotStim(
 )
 
 ########################
-#   result variable    #
+##      Trial Loop      #
 ########################
 for blk in exp:
     blk = [x for x in blk if x] # making sure no faulty values are passed through
@@ -184,6 +184,7 @@ for blk in exp:
         for _ in range(parameters["time"]["iti"]):
             win.flip()
 
+    # generating end of block feeback
     blk_num = blk[0]["blk"]
     num_trls = len(blk)
     corr = [x["corr"] for x in blk]
