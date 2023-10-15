@@ -1,11 +1,17 @@
 """
-This is the file where the actual experiment will be programmed.
+This experiment is to be a first draft of the experiment we will be implementing
+for our Masters Thesis.
+
+Congruency will be manipulated through the Congruency of movement direction and
+color. participants have to respond to each with a key press.
+
+A prime before the trial indicates which target dimension is relevant for the
+following trial.
+
+As DV, at this point, only Reaction time (and error commission) are recorded.
 
 To start with, helpers will be imported and the participant information stored
 in a seperate file (order will be randomized to assure anonymity)
-
-the trial list will be randomized at the beginning of each block. Will it
-though?
 """
 
 from psychopy import visual, event, core, gui
