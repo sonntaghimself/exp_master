@@ -81,6 +81,7 @@ def my_files(vp_info):
     files["date"] = dt.datetime.today().strftime("%d/%m/%Y")
     files["insdir"] = files["dirname"] + os.sep + "Instructions"
     files["resdir"] = files["dirname"] + os.sep + "Results"
+    files["demo"] = files["dirname"] + os.sep + "Demographics"
 
     if not os.path.isdir(files["resdir"]):
         os.makedirs(files["resdir"])
@@ -156,27 +157,21 @@ def randomisation(stimuli, vp_info, parameters, files):
 def demographics(vp_info, files):
     """this function takes care of storing the demographic data seperately from
     the other results and anonymises."""
-    my_file_path = files["dirname"] + os.sep + "demographics.csv"
+
+    if not os.path.isdir(files["demo"]):
+        os.makedirs(files["demo"])
+
+    my_file_path = files["demo"] + os.sep + "demographics.csv"
     df = pd.DataFrame()
 
     if os.path.isfile(my_file_path):
         # TODO: this is broken, somehow reading in the data doesn't want to work
         vp_info_cur = pd.read_csv(filepath_or_buffer = my_file_path, index_col=None)
 
-        # NOTE: records solution
-        # vp_info_cur = vp_info_cur.to_dict(orient="records")
-        # vp_info_cur = [vp_info_cur]
-        # vp_info_cur.append(vp_info)
-
-        # NOTE: this is the old; list solution
         vp_info_cur = vp_info_cur.to_dict(orient="list")
         vp_info_cur["age"].append(vp_info["age"])
         vp_info_cur["gender"].append(vp_info["gender"])
         vp_info_cur["handedness"].append(vp_info["handedness"])
-        # anonymisation
-        # random.shuffle(vp_info_cur["age"])
-        # random.shuffle(vp_info_cur["gender"])
-        # random.shuffle(vp_info_cur["handedness"])
     else: 
         vp_info_cur = {"age": [vp_info["age"]], "gender": [vp_info["gender"]], "handedness": [vp_info["handedness"]]}
 
