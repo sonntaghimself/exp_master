@@ -32,10 +32,8 @@ parameters = {
     "proportions": {"large": 0.85, "small": 0.70},
     "color": {"col_1": [0, 1, 0], "col_2": [1, 0, 0]},
     "dist_col": {"col_1": [1, 0, 0], "col_2": [0, 1, 0]},
-    "dir": {"up": 90, "down": 270},
-    "dist_dir": {"up": 270, "down": 90},
-    # "cor_resp_dir": {"right": "l", "left": "s"},
-    "colnames": {"col_1": "green", "col_2": "red"}
+    "shape": ["tri", "circ"],
+    "dist_shape": {"tri": "circ", "circ": "tri"},
 }
 
 ########################
@@ -52,27 +50,30 @@ elif vp_info["version"] == "test":
 ########################
 #       Stimuli        #
 ########################
-dir = ["up", "down"]
+shapes = parameters["shape"]
 col = ["col_1", "col_2"]
-tsk = ["color", "direction"]
+tsk = ["color", "shape"]
 stimuli = [
-    [direction, color, task] for direction in dir for color in col for task in tsk
+    [shape, color, task] for shape in shapes for color in col for task in tsk
 ]
+print(stimuli)
 
 # TODO: completely balance responses
 if vp_info["vp_num"] % 2:
     parameters["cor_resp_col"] = {"col_1": "s", "col_2": "l"}
-    parameters["cor_resp_dir"] = {"up": "s", "down": "l"}
+    parameters["cor_resp_sha"] = {parameters["shape"][0]: "s", 
+                                  parameters["shape"][1]: "l"}
 else:
     parameters["cor_resp_col"] = {"col_1": "l", "col_2": "s"}
-    parameters["cor_resp_dir"] = {"up": "l", "down": "s"}
+    parameters["cor_resp_sha"] = {parameters["shape"][1]: "s", 
+                                  parameters["shape"][0]: "l"}
 
 for stim in stimuli:
     if stim[2] == "color":
         stim.append(parameters["cor_resp_col"][stim[1]])
-    elif stim[2] == "direction":
-        stim.append(parameters["cor_resp_dir"][stim[0]])
-    if parameters["cor_resp_dir"][stim[0]] == parameters["cor_resp_col"][stim[1]]:
+    elif stim[2] == "shape":
+        stim.append(parameters["cor_resp_sha"][stim[0]])
+    if parameters["cor_resp_sha"][stim[0]] == parameters["cor_resp_col"][stim[1]]:
         stim.append("congruent")
     else:
         stim.append("incongruent")
@@ -114,24 +115,25 @@ fix_stim = visual.ShapeStim(
 )
 
 dots_stim = visual.DotStim(
-    win, dotSize=10, coherence=1, dotLife=150, speed=1, units="pix",
+    win, dotSize=10, coherence=1, dotLife=-1, speed=0, units="pix",
     fieldSize=win.size/4,
+    element = visual.Polygon(edges = 3),
     nDots = int((parameters["ndots"]*parameters["proportions"]["small"])/2),
     fieldShape = "circle"
 )
 dots_stim_alt = visual.DotStim(
-    win, dotSize=10, coherence=1, dotLife=150, speed=1, units="pix",
+    win, dotSize=10, coherence=1, dotLife=-1, speed=0, units="pix",
     fieldSize=win.size/4,
     nDots = dots_stim.nDots,
     fieldShape = "circle"
 )
 dots_dist = visual.DotStim(
-    win, dotSize=10, coherence=1, dotLife=150, speed=1, units="pix",
+    win, dotSize=10, coherence=1, dotLife=-1, speed=0, units="pix",
     fieldSize=win.size/4, nDots = int((parameters["ndots"]-dots_stim.nDots)/2),
     fieldShape = "circle"
 )
 dots_dist_alt = visual.DotStim(
-    win, dotSize=10, coherence=1, dotLife=150, speed=1, units="pix",
+    win, dotSize=10, coherence=1, dotLife=-1, speed=0, units="pix",
     fieldSize=win.size/4, nDots = dots_dist.nDots,
     fieldShape = "circle"
 )

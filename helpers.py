@@ -143,7 +143,7 @@ def randomisation(stimuli, vp_info, parameters, files):
             trl["blk"] = iblk + 1
             trl["trl"] = itrl + 1
             trl["practice"] = practice
-            trl["direction"] = stim_blk[itrl][0]
+            trl["shape"] = stim_blk[itrl][0]
             trl["color"] = stim_blk[itrl][1]
             trl["task"] = stim_blk[itrl][2]
             trl["cor_resp"] = stim_blk[itrl][3]
@@ -191,8 +191,8 @@ def read_instructions(files, parameters):
                     parameters["colnames"]["col_1"].capitalize(),
                     parameters["cor_resp_col"]["col_2"].capitalize(),
                     parameters["colnames"]["col_2"].capitalize(),
-                    parameters["cor_resp_dir"]["up"].capitalize(),
-                    parameters["cor_resp_dir"]["down"].capitalize(),
+                    parameters["cor_resp_sha"]["up"].capitalize(),
+                    parameters["cor_resp_sha"]["down"].capitalize(),
                     parameters["start_key"]
                 )
     return txt_inst
