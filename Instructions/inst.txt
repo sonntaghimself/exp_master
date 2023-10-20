@@ -14,7 +14,7 @@ For the color task, please respond with {} to the color {} and with {} to the
 color {}.
 
 For the movement task, please respond with {} if the majority of all dots are
-moving to the left and with {} if the majority of all dots are moving to the
-right.
+moving up and with {} if the majority of all dots are moving to the
+down.
 
 to continue please click {}.
