@@ -29,13 +29,17 @@ parameters = {
     "start_key": "space",
     "dotsize": 50,
     "ndots": 100,
+    "stim_size": 20,
     "proportions": {"large": 0.85, "small": 0.70},
     "color": {"col_1": [0, 1, 0], "col_2": [1, 0, 0]},
     "dist_col": {"col_1": [1, 0, 0], "col_2": [0, 1, 0]},
     "shape": ["tri", "circ"],
     "dist_shape": {"tri": "circ", "circ": "tri"},
+    "colnames": {"col_1": "green", "col_2": "red"},
+    "edges": 3,
 }
 
+parameters["stim_num"] = int(parameters["ndots"]*parameters["proportions"]["small"])
 ########################
 #    vp information    #
 ########################
@@ -114,30 +118,6 @@ fix_stim = visual.ShapeStim(
     closeShape=False,
 )
 
-dots_stim = visual.DotStim(
-    win, dotSize=10, coherence=1, dotLife=-1, speed=0, units="pix",
-    fieldSize=win.size/4,
-    element = visual.Polygon(edges = 3),
-    nDots = int((parameters["ndots"]*parameters["proportions"]["small"])/2),
-    fieldShape = "circle"
-)
-dots_stim_alt = visual.DotStim(
-    win, dotSize=10, coherence=1, dotLife=-1, speed=0, units="pix",
-    fieldSize=win.size/4,
-    nDots = dots_stim.nDots,
-    fieldShape = "circle"
-)
-dots_dist = visual.DotStim(
-    win, dotSize=10, coherence=1, dotLife=-1, speed=0, units="pix",
-    fieldSize=win.size/4, nDots = int((parameters["ndots"]-dots_stim.nDots)/2),
-    fieldShape = "circle"
-)
-dots_dist_alt = visual.DotStim(
-    win, dotSize=10, coherence=1, dotLife=-1, speed=0, units="pix",
-    fieldSize=win.size/4, nDots = dots_dist.nDots,
-    fieldShape = "circle"
-)
-
 ########################
 #      Trial Loop      #
 ########################
@@ -158,14 +138,50 @@ for blk in exp:
             fix_stim.draw()
             win.flip()
 
-        dots_stim.color = parameters["color"][trl["color"]]
-        dots_stim.dir = parameters["dir"][trl["direction"]]
-        dots_stim_alt.color = parameters["dist_col"][trl["color"]]
-        dots_stim_alt.dir = parameters["dir"][trl["direction"]]
-        dots_dist.color = parameters["dist_col"][trl["color"]]
-        dots_dist.dir = parameters["dist_dir"][trl["direction"]]
-        dots_dist_alt.color = parameters["color"][trl["color"]]
-        dots_dist_alt.dir = parameters["dist_dir"][trl["direction"]]
+        ########################
+        #       Stim gen       #
+        ########################
+        poly_stims = []
+        circles = []
+        if trl["shape"] == ["circle"]:
+            n_circ = parameters["stim_num"]
+        else: 
+            n_circ = parameters["ndots"] - parameters["stim_num"]
+
+        n_pol = parameters["ndots"] - n_circ
+
+        for n in range(n_circ):
+            circ = visual.Circle(
+                win=win,
+                units="pix",
+                size=parameters["stim_size"],
+                pos=(
+                    random.uniform((-win.size/4), (win.size/4)),
+                    random.uniform((-win.size/4), (win.size/4))
+                ),
+            )
+            if n <= (n_circ * parameters["proportions"]["small"]):
+                circ.color = parameters["color"][trl["color"]]
+            else:
+                circ.color = parameters["dist_col"][trl["color"]]
+            circles.append(circ)
+
+        for n in range(n_pol):
+            pol = visual.Polygon(
+                win=win,
+                units="pix",
+                size=parameters["stim_size"],
+                pos=(
+                    random.uniform((-win.size/4), (win.size/4)),
+                    random.uniform((-win.size/4), (win.size/4))
+                ),
+                edges=parameters["edges"]
+            )
+            if n <= (n_pol * parameters["proportions"]["small"]):
+                pol.color = parameters["color"][trl["color"]]
+            else:
+                pol.color = parameters["dist_col"][trl["color"]]
+            poly_stims.append(pol)
 
         win.callOnFlip(timer.reset)
 
@@ -176,10 +192,10 @@ for blk in exp:
         slow = False
 
         while not trl_complete:
-            dots_stim.draw()
-            dots_dist.draw()
-            dots_dist_alt.draw()
-            dots_stim_alt.draw()
+            for poly in poly_stims:
+                poly.draw()
+            for circle in circles:
+                circle.draw()
             win.flip()
             frames += 1
             keys = []

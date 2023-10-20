@@ -191,8 +191,8 @@ def read_instructions(files, parameters):
                     parameters["colnames"]["col_1"].capitalize(),
                     parameters["cor_resp_col"]["col_2"].capitalize(),
                     parameters["colnames"]["col_2"].capitalize(),
-                    parameters["cor_resp_sha"]["up"].capitalize(),
-                    parameters["cor_resp_sha"]["down"].capitalize(),
+                    parameters["cor_resp_sha"]["tri"].capitalize(),
+                    parameters["cor_resp_sha"]["circ"].capitalize(),
                     parameters["start_key"]
                 )
     return txt_inst
