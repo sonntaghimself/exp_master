@@ -145,7 +145,7 @@ for blk in exp:
         circles = []
         if trl["shape"] == ["circle"]:
             n_circ = parameters["stim_num"]
-        else: 
+        else:
             n_circ = parameters["ndots"] - parameters["stim_num"]
 
         n_pol = parameters["ndots"] - n_circ
