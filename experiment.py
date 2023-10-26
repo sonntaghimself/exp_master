@@ -37,6 +37,7 @@ parameters = {
     "dist_shape": {"tri": "circ", "circ": "tri"},
     "colnames": {"col_1": "green", "col_2": "red"},
     "edges": 3,
+    "win_size": [1280, 800]
 }
 
 parameters["stim_num"] = int(parameters["ndots"]*parameters["proportions"]["small"])
@@ -103,7 +104,7 @@ inst_text = helpers.read_instructions(files, parameters)
 ########################
 #       Psychopy       #
 ########################
-win = visual.Window(size=(1280, 800), color=(0, 0, 0), units="pix")
+win = visual.Window(size=parameters["win_size"], color=(0, 0, 0), units="pix")
 timer = core.Clock()
 inst_stim = visual.TextStim(win, text=inst_text["inst"], alignText="center",
                             wrapWidth=(0.75*win.size[0]))
@@ -156,8 +157,8 @@ for blk in exp:
                 units="pix",
                 size=parameters["stim_size"],
                 pos=(
-                    random.uniform((-win.size/4), (win.size/4)),
-                    random.uniform((-win.size/4), (win.size/4))
+                    random.uniform((-parameters["win_size"][0]/3), (parameters["win_size"][0]/3)),
+                    random.uniform((-parameters["win_size"][1]/3), (parameters["win_size"][1]/3))
                 ),
             )
             if n <= (n_circ * parameters["proportions"]["small"]):
@@ -170,17 +171,20 @@ for blk in exp:
             pol = visual.Polygon(
                 win=win,
                 units="pix",
+                edges=parameters["edges"],
                 size=parameters["stim_size"],
+                # autoDraw = True,
                 pos=(
-                    random.uniform((-win.size/4), (win.size/4)),
-                    random.uniform((-win.size/4), (win.size/4))
+                    random.uniform((-parameters["win_size"][0]/3), (parameters["win_size"][0]/3)),
+                    random.uniform((-parameters["win_size"][1]/3), (parameters["win_size"][1]/3))
                 ),
-                edges=parameters["edges"]
             )
             if n <= (n_pol * parameters["proportions"]["small"]):
-                pol.color = parameters["color"][trl["color"]]
+                pol.fillColor = parameters["color"][trl["color"]]
+                pol.lineColor = parameters["color"][trl["color"]]
             else:
-                pol.color = parameters["dist_col"][trl["color"]]
+                pol.lineColor = parameters["dist_col"][trl["color"]]
+                pol.fillColor = parameters["dist_col"][trl["color"]]
             poly_stims.append(pol)
 
         win.callOnFlip(timer.reset)
