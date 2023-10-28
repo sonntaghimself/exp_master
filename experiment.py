@@ -28,8 +28,8 @@ parameters = {
     "keys": ["s", "l"],
     "start_key": "space",
     "dotsize": 50,
-    "ndots": 100,
-    "stim_size": 20,
+    "ndots": 200,
+    "stim_size": 10,
     "proportions": {"large": 0.85, "small": 0.70},
     "color": {"col_1": [0, 1, 0], "col_2": [1, 0, 0]},
     "dist_col": {"col_1": [1, 0, 0], "col_2": [0, 1, 0]},
@@ -151,6 +151,7 @@ for blk in exp:
 
         n_pol = parameters["ndots"] - n_circ
 
+        # TODO: take care of the pos. generation
         for n in range(n_circ):
             circ = visual.Circle(
                 win=win,
