@@ -28,8 +28,8 @@ parameters = {
     "keys": ["s", "l"],
     "start_key": "space",
     "dotsize": 50,
-    "ndots": 200,
-    "stim_size": 10,
+    "ndots": 400,
+    "stim_size": 15,
     "proportions": {"large": 0.85, "small": 0.70},
     "color": {"col_1": [0, 1, 0], "col_2": [1, 0, 0]},
     "dist_col": {"col_1": [1, 0, 0], "col_2": [0, 1, 0]},
@@ -157,10 +157,10 @@ for blk in exp:
                 win=win,
                 units="pix",
                 size=parameters["stim_size"],
-                pos=(
-                    random.uniform((-parameters["win_size"][0]/3), (parameters["win_size"][0]/3)),
-                    random.uniform((-parameters["win_size"][1]/3), (parameters["win_size"][1]/3))
-                ),
+                # pos=(
+                #     random.uniform((-parameters["win_size"][0]/3), (parameters["win_size"][0]/3)),
+                #     random.uniform((-parameters["win_size"][1]/3), (parameters["win_size"][1]/3))
+                # ),
             )
             if n <= (n_circ * parameters["proportions"]["small"]):
                 circ.color = parameters["color"][trl["color"]]
@@ -175,10 +175,10 @@ for blk in exp:
                 edges=parameters["edges"],
                 size=parameters["stim_size"],
                 # autoDraw = True,
-                pos=(
-                    random.uniform((-parameters["win_size"][0]/3), (parameters["win_size"][0]/3)),
-                    random.uniform((-parameters["win_size"][1]/3), (parameters["win_size"][1]/3))
-                ),
+                # pos=(
+                #     random.uniform((-parameters["win_size"][0]/3), (parameters["win_size"][0]/3)),
+                #     random.uniform((-parameters["win_size"][1]/3), (parameters["win_size"][1]/3))
+                # ),
             )
             if n <= (n_pol * parameters["proportions"]["small"]):
                 pol.fillColor = parameters["color"][trl["color"]]
@@ -187,6 +187,32 @@ for blk in exp:
                 pol.lineColor = parameters["dist_col"][trl["color"]]
                 pol.fillColor = parameters["dist_col"][trl["color"]]
             poly_stims.append(pol)
+
+        circ_pos = []
+        for _ in range(n_circ):
+            x_max = int((parameters["win_size"][0] / parameters["stim_size"]))
+            y_max = int((parameters["win_size"][1] / parameters["stim_size"]))
+            x_max = x_max // 3
+            y_max = y_max // 3
+            x = int(random.sample(range(x_max+1, -x_max-1, -1), 1)[0] * parameters["stim_size"])
+            y = int(random.sample(range(y_max+1, -y_max-1, -1), 1)[0] * parameters["stim_size"])
+            while (x, y) in circ_pos:
+                x = int(random.sample(range(x_max+1, -x_max-1, -1), 1)[0] * parameters["stim_size"])
+                y = int(random.sample(range(y_max+1, -y_max-1, -1), 1)[0] * parameters["stim_size"])
+            circ_pos.append((x, y))
+        pol_pos = []
+        for _ in range(n_pol):
+            x_max = int((parameters["win_size"][0] / parameters["stim_size"]))
+            y_max = int((parameters["win_size"][1] / parameters["stim_size"]))
+            x_max = x_max // 3
+            y_max = y_max // 3
+            x = int(random.sample(range(x_max+1, -x_max-1, -1), 1)[0] * parameters["stim_size"])
+            y = int(random.sample(range(y_max+1, -y_max-1, -1), 1)[0] * parameters["stim_size"])
+            while (x, y) in circ_pos or (x, y) in pol_pos:
+                x = int(random.sample(range(x_max+1, -x_max-1, -1), 1)[0] * parameters["stim_size"])
+                y = int(random.sample(range(y_max+1, -y_max-1, -1), 1)[0] * parameters["stim_size"])
+            pol_pos.append((x, y))
+
 
         win.callOnFlip(timer.reset)
 
@@ -197,9 +223,11 @@ for blk in exp:
         slow = False
 
         while not trl_complete:
-            for poly in poly_stims:
+            for idx, poly in enumerate(poly_stims):
+                poly.pos = pol_pos[idx]
                 poly.draw()
-            for circle in circles:
+            for idx, circle in enumerate(circles):
+                circle.pos = circ_pos[idx]
                 circle.draw()
             win.flip()
             frames += 1
