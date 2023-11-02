@@ -116,23 +116,12 @@ fix_stim = visual.ShapeStim(
 dots_stim = visual.DotStim(
     win, dotSize=10, coherence=1, dotLife=150, speed=1, units="pix",
     fieldSize=win.size/4,
-    nDots = int((parameters["ndots"]*parameters["proportions"]["small"])/2),
-    fieldShape = "circle"
-)
-dots_stim_alt = visual.DotStim(
-    win, dotSize=10, coherence=1, dotLife=150, speed=1, units="pix",
-    fieldSize=win.size/4,
-    nDots = dots_stim.nDots,
+    nDots = int((parameters["ndots"]*parameters["proportions"]["small"])),
     fieldShape = "circle"
 )
 dots_dist = visual.DotStim(
     win, dotSize=10, coherence=1, dotLife=150, speed=1, units="pix",
-    fieldSize=win.size/4, nDots = int((parameters["ndots"]-dots_stim.nDots)/2),
-    fieldShape = "circle"
-)
-dots_dist_alt = visual.DotStim(
-    win, dotSize=10, coherence=1, dotLife=150, speed=1, units="pix",
-    fieldSize=win.size/4, nDots = dots_dist.nDots,
+    fieldSize=win.size/4, nDots = int((parameters["ndots"]-dots_stim.nDots)),
     fieldShape = "circle"
 )
 
@@ -156,14 +145,14 @@ for blk in exp:
             fix_stim.draw()
             win.flip()
 
-        dots_stim.color = parameters["color"][trl["color"]]
-        dots_stim.dir = parameters["dir"][trl["direction"]]
-        dots_stim_alt.color = parameters["dist_col"][trl["color"]]
-        dots_stim_alt.dir = parameters["dir"][trl["direction"]]
-        dots_dist.color = parameters["dist_col"][trl["color"]]
-        dots_dist.dir = parameters["dist_dir"][trl["direction"]]
-        dots_dist_alt.color = parameters["color"][trl["color"]]
-        dots_dist_alt.dir = parameters["dist_dir"][trl["direction"]]
+            dots_stim.color = parameters["color"][trl["color"]]
+            dots_stim.dir = parameters["dir"][trl["direction"]]
+        if trl["task"] == "direction":
+            dots_dist.color = parameters["color"][trl["color"]]
+            dots_dist.dir = parameters["dist_dir"][trl["direction"]]
+        if trl["task"] == "color":
+            dots_dist.color = parameters["dist_col"][trl["color"]]
+            dots_dist.dir = parameters["dir"][trl["direction"]]
 
         win.callOnFlip(timer.reset)
 
@@ -176,8 +165,6 @@ for blk in exp:
         while not trl_complete:
             dots_stim.draw()
             dots_dist.draw()
-            dots_dist_alt.draw()
-            dots_stim_alt.draw()
             win.flip()
             frames += 1
             keys = []
