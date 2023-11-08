@@ -28,12 +28,12 @@ parameters = {
     "keys": ["s", "l"],
     "start_key": "space",
     "dotsize": 50,
-    "ndots": 200,
+    "ndots": 400,
     "proportions": {
         "color":    {"large": 0.85, "small": 0.70},
         "direction":{"large": 0.85, "small": 0.70}
     },
-    "color": {"col_1": [0, 0, 1], "col_2": [1, 0, 0]},
+    "color": {"col_1": [-1, -1, 1], "col_2": [1, -1, -1]},
     # "dist_col": {"col_1": [1, 0, 0], "col_2": [0, 1, 0]},
     "dir": {"up": 90, "down": 270},
     # "dist_dir": {"up": 270, "down": 90},
@@ -107,7 +107,8 @@ inst_text = helpers.read_instructions(files, parameters)
 ########################
 #       Psychopy       #
 ########################
-win = visual.Window(size=(1280, 800), color=(0, 0, 0), units="pix")
+# win = visual.Window(size=(800, 800), color=(0, 0, 0), units="pix")
+win = visual.Window(color = (0, 0, 0), fullscr=True, units="pix")
 timer = core.Clock()
 inst_stim = visual.TextStim(win, text=inst_text["inst"], alignText="center",
                             wrapWidth=(0.75*win.size[0]))
@@ -123,8 +124,8 @@ fix_stim = visual.ShapeStim(
 )
 
 dots_stim = visual.DotStim(
-    win, dotSize=10, coherence=1, dotLife=150, speed=1, units="pix",
-    fieldSize=win.size/4,
+    win, dotSize=10, coherence=1, dotLife=-1, speed=1.5, units="pix",
+    fieldSize=[win.size[1]/4, win.size[1]/4],
     nDots = int((parameters["ndots"]*parameters["proportions"]["color"]["small"])),
     fieldShape = "circle"
 )
