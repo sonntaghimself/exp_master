@@ -29,12 +29,14 @@ parameters = {
     "start_key": "space",
     "dotsize": 50,
     "ndots": 100,
-    "proportions": {"large": 0.85, "small": 0.70},
+    "proportions": {
+        "color":    {"large": 0.85, "small": 0.70},
+        "direction":{"large": 0.85, "small": 0.70}
+    },
     "color": {"col_1": [0, 1, 0], "col_2": [1, 0, 0]},
     "dist_col": {"col_1": [1, 0, 0], "col_2": [0, 1, 0]},
     "dir": {"up": 90, "down": 270},
     "dist_dir": {"up": 270, "down": 90},
-    # "cor_resp_dir": {"right": "l", "left": "s"},
     "colnames": {"col_1": "green", "col_2": "red"}
 }
 
@@ -60,11 +62,18 @@ stimuli = [
 ]
 
 # TODO: completely balance responses
-if vp_info["vp_num"] % 2:
-    parameters["cor_resp_col"] = {"col_1": "s", "col_2": "l"}
+if vp_info["vp_num"] % 2 == 0:
+    if vp_info["vp_num"] % 4 == 0:
+        parameters["cor_resp_col"] = {"col_1": "l", "col_2": "s"}
+        parameters["cor_resp_dir"] = {"up": "l", "down": "s"}
+    else: 
+        parameters["cor_resp_col"] = {"col_1": "s", "col_2": "l"}
+        parameters["cor_resp_dir"] = {"up": "s", "down": "l"}
+elif vp_info["vp_num"] % 3 == 0:
+    parameters["cor_resp_col"] = {"col_1": "l", "col_2": "s"}
     parameters["cor_resp_dir"] = {"up": "s", "down": "l"}
 else:
-    parameters["cor_resp_col"] = {"col_1": "l", "col_2": "s"}
+    parameters["cor_resp_col"] = {"col_1": "s", "col_2": "l"}
     parameters["cor_resp_dir"] = {"up": "l", "down": "s"}
 
 for stim in stimuli:
@@ -113,13 +122,25 @@ fix_stim = visual.ShapeStim(
     closeShape=False,
 )
 
-dots_stim = visual.DotStim(
+dots_stim_col = visual.DotStim(
     win, dotSize=10, coherence=1, dotLife=150, speed=1, units="pix",
     fieldSize=win.size/4,
-    nDots = int((parameters["ndots"]*parameters["proportions"]["small"])),
+    nDots = int((parameters["ndots"]*parameters["proportions"]["color"]["small"])),
     fieldShape = "circle"
 )
-dots_dist = visual.DotStim(
+dots_dist_col = visual.DotStim(
+    win, dotSize=10, coherence=1, dotLife=150, speed=1, units="pix",
+    fieldSize=win.size/4, nDots = int((parameters["ndots"]-dots_stim.nDots)),
+    fieldShape = "circle"
+)
+
+dots_stim_dir = visual.DotStim(
+    win, dotSize=10, coherence=1, dotLife=150, speed=1, units="pix",
+    fieldSize=win.size/4,
+    nDots = int((parameters["ndots"]*parameters["proportions"]["direction"]["small"])),
+    fieldShape = "circle"
+)
+dots_dist_dir = visual.DotStim(
     win, dotSize=10, coherence=1, dotLife=150, speed=1, units="pix",
     fieldSize=win.size/4, nDots = int((parameters["ndots"]-dots_stim.nDots)),
     fieldShape = "circle"
@@ -145,14 +166,18 @@ for blk in exp:
             fix_stim.draw()
             win.flip()
 
-            dots_stim.color = parameters["color"][trl["color"]]
-            dots_stim.dir = parameters["dir"][trl["direction"]]
-        if trl["task"] == "direction":
-            dots_dist.color = parameters["color"][trl["color"]]
-            dots_dist.dir = parameters["dist_dir"][trl["direction"]]
         if trl["task"] == "color":
-            dots_dist.color = parameters["dist_col"][trl["color"]]
-            dots_dist.dir = parameters["dir"][trl["direction"]]
+            dots_stim = dots_stim_col
+            dots_dist = dots_dist_dir
+
+        #     dots_stim.color = parameters["color"][trl["color"]]
+        #     dots_stim.dir = parameters["dir"][trl["direction"]]
+        # if trl["task"] == "direction":
+        #     dots_dist.color = parameters["color"][trl["color"]]
+        #     dots_dist.dir = parameters["dist_dir"][trl["direction"]]
+        # if trl["task"] == "color":
+        #     dots_dist.color = parameters["dist_col"][trl["color"]]
+        #     dots_dist.dir = parameters["dir"][trl["direction"]]
 
         win.callOnFlip(timer.reset)
 
