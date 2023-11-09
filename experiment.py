@@ -24,7 +24,7 @@ import helpers
 #   global variables   #
 ########################
 parameters = {
-    "time": {"fix": 30, "feedback": 50, "iti": 30, "task": 30, "pres": 200},
+    "time": {"fix": 50, "feedback": 50, "iti": 30, "task": 50, "pres": 200},
     "keys": ["s", "l"],
     "start_key": "space",
     "dotsize": 50,
@@ -123,12 +123,12 @@ fix_stim = visual.ShapeStim(
     closeShape=False,
 )
 
-dots_stim = visual.DotStim(
-    win, dotSize=10, coherence=1, dotLife=-1, speed=1.5, units="pix",
-    fieldSize=[win.size[1]/4, win.size[1]/4],
-    nDots = int((parameters["ndots"]*parameters["proportions"]["color"]["small"])),
-    fieldShape = "circle"
-)
+# dots_stim = visual.DotStim(
+#     win, dotSize=10, coherence=1, dotLife=-1, speed=1.5, units="pix",
+#     fieldSize=[win.size[1]/4, win.size[1]/4],
+#     nDots = int((parameters["ndots"]*parameters["proportions"]["color"]["small"])),
+#     fieldShape = "circle"
+# )
 
 ########################
 #      Trial Loop      #
@@ -150,14 +150,15 @@ for blk in exp:
             fix_stim.draw()
             win.flip()
 
+        dots_stim = visual.DotStim(
+            win, dotSize=10, coherence=1, dotLife=-1, speed=1.5, units="pix",
+            fieldSize=[win.size[1]/4, win.size[1]/4],
+            nDots = int((parameters["ndots"]*parameters["proportions"]["color"]["small"])),
+            fieldShape = "circle"
+        )
+
         dots_stim.color = parameters["color"][trl["color"]]
         dots_stim.dir = parameters["dir"][trl["direction"]]
-        # if trl["task"] == "direction":
-        #     dots_dist.color = parameters["color"][trl["color"]]
-        #     dots_dist.dir = parameters["dist_dir"][trl["direction"]]
-        # if trl["task"] == "color":
-        #     dots_dist.color = parameters["dist_col"][trl["color"]]
-        #     dots_dist.dir = parameters["dir"][trl["direction"]]
 
         win.callOnFlip(timer.reset)
 
