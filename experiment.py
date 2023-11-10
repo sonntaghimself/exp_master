@@ -214,8 +214,8 @@ for blk in exp:
     # generating end of block feeback
     blk_num = blk[0]["blk"]
     num_trls = len(blk)
-    corr = [x["corr"] for x in blk]
-    blk_per = (corr.count(1) / num_trls) * 100
+    corr_blk = [x["corr"] for x in blk]
+    blk_per = (corr_blk.count(1) / num_trls) * 100
 
     fb_txt = "Block {} of {}, \n Correct: {}%".format(blk_num, len(exp), blk_per)
     fb_txt = fb_txt + "\n\nPress the spacebar to continue."

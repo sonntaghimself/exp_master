@@ -20,10 +20,10 @@ for (f in datFiles) {
 ########################
 #      data prep       #
 ########################
-dat %<>% filter(corr == 1)
+dat %<>% filter(corr == 1, transition %in% c("repetition", "switch"))
 
 dat %>%
-  group_by(congruency, task) %>%
+  group_by(congruency, transition) %>%
   summarise(meanRT = mean(rt))
 
 # m.0 <- lm(rt ~ 1, dat)
@@ -32,3 +32,12 @@ dat %>%
 # # m.3 <- lm(rt ~ congruency + task + (1 | vp_num), dat)
 #
 # anova(m.0, m.1, m.2, m.3)
+
+table(dat$congruency, dat$transition)
+#
+#               repetition switch
+#   congruent            1      6
+#   incongruent          5      6
+
+# NOTE: This might be an issue!! we don't have an equal amount of repetition and
+# switch trials
