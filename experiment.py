@@ -60,7 +60,6 @@ stimuli = [
     [direction, color, task] for direction in dir for color in col for task in tsk
 ]
 
-# TODO: completely balance responses
 if vp_info["vp_num"] % 2 == 0:
     if vp_info["vp_num"] % 4 == 0:
         parameters["cor_resp_col"] = {"col_1": "l", "col_2": "s"}
