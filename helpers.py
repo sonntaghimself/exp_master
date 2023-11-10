@@ -148,6 +148,10 @@ def randomisation(stimuli, vp_info, parameters, files):
             trl["task"] = stim_blk[itrl][2]
             trl["cor_resp"] = stim_blk[itrl][3]
             trl["congruency"] = stim_blk[itrl][4]
+            if itrl > 0:
+                trl["transition"] = "repetition" if stim_blk[itrl][2] == stim_blk[(itrl-1)][2] else "switch"
+            else:
+                trl["transition"] = "first"
 
     return exp
 
@@ -165,9 +169,7 @@ def demographics(vp_info, files):
     df = pd.DataFrame()
 
     if os.path.isfile(my_file_path):
-        # TODO: this is broken, somehow reading in the data doesn't want to work
         vp_info_cur = pd.read_csv(filepath_or_buffer = my_file_path, index_col=None)
-
         vp_info_cur = vp_info_cur.to_dict(orient="list")
         vp_info_cur["age"].append(vp_info["age"])
         vp_info_cur["gender"].append(vp_info["gender"])

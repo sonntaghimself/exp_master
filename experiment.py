@@ -14,10 +14,9 @@ To start with, helpers will be imported and the participant information stored
 in a seperate file (order will be randomized to assure anonymity)
 """
 
-from psychopy import visual, event, core, gui
+from psychopy import visual, event, core
 import datetime as dt
 import pandas as pd
-import random
 import helpers
 
 ########################
@@ -30,14 +29,14 @@ parameters = {
     "dotsize": 50,
     "ndots": 400,
     "proportions": {
-        "color":    {"large": 0.85, "small": 0.70},
-        "direction":{"large": 0.85, "small": 0.70}
+        "color": {"large": 0.85, "small": 0.70},
+        "direction": {"large": 0.85, "small": 0.70},
     },
     "color": {"col_1": [-1, -1, 1], "col_2": [1, -1, -1]},
     # "dist_col": {"col_1": [1, 0, 0], "col_2": [0, 1, 0]},
     "dir": {"up": 90, "down": 270},
     # "dist_dir": {"up": 270, "down": 90},
-    "colnames": {"col_1": "green", "col_2": "red"}
+    "colnames": {"col_1": "green", "col_2": "red"},
 }
 
 ########################
@@ -46,9 +45,9 @@ parameters = {
 vp_info = helpers.gather_information()
 
 if vp_info["version"] == "full":
-    parameters["num"] = {"nblks": 10, "pracblks": 2, "nprac": 16, "ntrls" : 40}
+    parameters["num"] = {"nblks": 10, "pracblks": 2, "nprac": 16, "ntrls": 40}
 elif vp_info["version"] == "test":
-    parameters["num"] = {"nblks": 2, "pracblks": 0, "nprac": 8, "ntrls" : 8}
+    parameters["num"] = {"nblks": 2, "pracblks": 0, "nprac": 8, "ntrls": 8}
 # NOTE: since we have 4 stimuli (and two tasks), the #of trials has to be divisible by 8 (& >= 8)
 
 ########################
@@ -108,10 +107,11 @@ inst_text = helpers.read_instructions(files, parameters)
 #       Psychopy       #
 ########################
 # win = visual.Window(size=(800, 800), color=(0, 0, 0), units="pix")
-win = visual.Window(color = (0, 0, 0), fullscr=True, units="pix")
+win = visual.Window(color=(0, 0, 0), fullscr=True, units="pix")
 timer = core.Clock()
-inst_stim = visual.TextStim(win, text=inst_text["inst"], alignText="center",
-                            wrapWidth=(0.75*win.size[0]))
+inst_stim = visual.TextStim(
+    win, text=inst_text["inst"], alignText="center", wrapWidth=(0.75 * win.size[0])
+)
 fb_stim = visual.TextStim(win)
 task_stim = visual.TextStim(win)
 fix_stim = visual.ShapeStim(
@@ -134,7 +134,7 @@ fix_stim = visual.ShapeStim(
 #      Trial Loop      #
 ########################
 for blk in exp:
-    blk = [x for x in blk if x] # making sure no faulty values are passed through
+    blk = [x for x in blk if x]  # making sure no faulty values are passed through
 
     if blk[0]["blk"] == 1:
         inst_stim.draw()
@@ -151,10 +151,17 @@ for blk in exp:
             win.flip()
 
         dots_stim = visual.DotStim(
-            win, dotSize=10, coherence=1, dotLife=-1, speed=1.5, units="pix",
-            fieldSize=[win.size[1]/4, win.size[1]/4],
-            nDots = int((parameters["ndots"]*parameters["proportions"]["color"]["small"])),
-            fieldShape = "circle"
+            win,
+            dotSize=10,
+            coherence=1,
+            dotLife=-1,
+            speed=1.5,
+            units="pix",
+            fieldSize=[win.size[1] / 4, win.size[1] / 4],
+            nDots=int(
+                (parameters["ndots"] * parameters["proportions"]["color"]["small"])
+            ),
+            fieldShape="circle",
         )
 
         dots_stim.color = parameters["color"][trl["color"]]
@@ -170,7 +177,6 @@ for blk in exp:
 
         while not trl_complete:
             dots_stim.draw()
-            # dots_dist.draw()
             win.flip()
             frames += 1
             keys = []
@@ -178,11 +184,11 @@ for blk in exp:
             if keys:
                 rt = timer.getTime()
                 if trl["cor_resp"] in keys:
-                   corr = 1
-                   fb_stim.text = "Correct"
+                    corr = 1
+                    fb_stim.text = "Correct"
                 else:
-                   corr = 0
-                   fb_stim.text = "Incorrect"
+                    corr = 0
+                    fb_stim.text = "Incorrect"
                 trl_complete = True
 
             if frames >= parameters["time"]["pres"]:
