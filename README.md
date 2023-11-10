@@ -1,16 +1,14 @@
 # exp_master
 
-In this version of the experiment, we will be implementing only one condition
-of the distractor task.
+This is the preliminary version of our first Experiment for the Master's Thesis.
 
-i.e.: If color is the relevant dimension, the dots will only be moving either
-congruently or incongruently. No competing alternatives within the movement
-task.
+This is the behavioral pilot version.
 
-# NOTE: To me at least, it seems to be a LOT more difficult to discern the
-# movement direction if there is only one color present. -> This may elicit the
-# need to exacerbate the majority further.
+There is no conflict within the tasks. Conflict arises through the response
+congruency between color and movement task.
 
-# --> TODO: In this Version of the experiment, the proportions of the Dots are
-# not independently controllable for each task. -> Setting the proportion sets
-# it for color, as well as movement direction. This has to be adapted!!
+TODO:
+# Instructions need to be rewritten, and increased in size. -> Maybe have them be on 2-3 pages
+# Checking the required number of Dots (nDots), in one experiment, they used only 120
+# reconsidering the speed of movement.
+# Configuring a consistent measurement of frame rate.
