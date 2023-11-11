@@ -28,6 +28,7 @@ order to guarantee anonymisation.
 
 gender = ["female", "male", "non-binary", "prefer not to answer"]
 
+
 ########################
 #      check_data      #
 ########################
@@ -47,28 +48,30 @@ def check_data(ok_data):
 #  gather_information  #
 ########################
 def gather_information():
-    """this function gathers (demographic) information about the participants 
-    (including whether to run the test-version or not) and returns a dictionary 
+    """this function gathers (demographic) information about the participants
+    (including whether to run the test-version or not) and returns a dictionary
     containing the information.
     """
     myDlg = gui.Dlg(title="Participant Information")
-    myDlg.addText('Subject info')
-    myDlg.addField('VP Number:', initial=1)
-    myDlg.addField('Age:', initial=18, tip="you have to be at least 18")
-    myDlg.addField('Gender:', choices=gender)
-    myDlg.addField('Handedness:', choices=["left", "right", "ambidextrous"])
-    myDlg.addField('version', choices=["full", "test"])
+    myDlg.addText("Subject info")
+    myDlg.addField("VP Number:", initial=1)
+    myDlg.addField("Age:", initial=18, tip="you have to be at least 18")
+    myDlg.addField("Gender:", choices=gender)
+    myDlg.addField("Handedness:", choices=["left", "right", "ambidextrous"])
+    myDlg.addField("version", choices=["full", "test"])
     ok_data = myDlg.show()  # show dialog and wait for OK or Cancel
     check_passed = check_data(ok_data)
     if not check_passed:  # or if ok_data is not None
         return gather_information()
     else:
-        return {"vp_num": ok_data[0],
-                "age": ok_data[1], 
-                "gender": ok_data[2],
-                "handedness": ok_data[3],
-                "version": ok_data[4]
-                }
+        return {
+            "vp_num": ok_data[0],
+            "age": ok_data[1],
+            "gender": ok_data[2],
+            "handedness": ok_data[3],
+            "version": ok_data[4],
+        }
+
 
 ########################
 #      open files      #
@@ -86,7 +89,14 @@ def my_files(vp_info):
     if not os.path.isdir(files["resdir"]):
         os.makedirs(files["resdir"])
 
-    files["resfile"] = files["resdir"] + os.sep + files["expname"] + "_" + str(vp_info["vp_num"]) + ".res"
+    files["resfile"] = (
+        files["resdir"]
+        + os.sep
+        + files["expname"]
+        + "_"
+        + str(vp_info["vp_num"])
+        + ".res"
+    )
 
     print(files["resfile"])
 
@@ -100,23 +110,21 @@ def my_files(vp_info):
             sys.exit()
     return files
 
+
 ########################
 #    randomisation     #
 ########################
 def randomisation(stimuli, vp_info, parameters, files):
-
     all_blocks = parameters["num"]["pracblks"] + parameters["num"]["nblks"]
 
     if parameters["num"]["ntrls"] < len(stimuli):
         exp = [[{} for _ in range(len(stimuli))] for _ in range(all_blocks)]
     elif parameters["num"]["ntrls"] >= len(stimuli):
         exp = [
-            [{} for _ in range(parameters["num"]["ntrls"])] for _ in
-            range(all_blocks)
+            [{} for _ in range(parameters["num"]["ntrls"])] for _ in range(all_blocks)
         ]
 
     for iblk, blk in enumerate(exp):
-
         if iblk < parameters["num"]["pracblks"]:
             nstim = parameters["num"]["nprac"]
             practice = True
@@ -132,7 +140,6 @@ def randomisation(stimuli, vp_info, parameters, files):
         random.shuffle(stim_blk)
 
         for itrl, trl in enumerate(blk):
-
             if itrl >= len(stim_blk):
                 break
 
@@ -149,11 +156,16 @@ def randomisation(stimuli, vp_info, parameters, files):
             trl["cor_resp"] = stim_blk[itrl][3]
             trl["congruency"] = stim_blk[itrl][4]
             if itrl > 0:
-                trl["transition"] = "repetition" if stim_blk[itrl][2] == stim_blk[(itrl-1)][2] else "switch"
+                trl["transition"] = (
+                    "repetition"
+                    if stim_blk[itrl][2] == stim_blk[(itrl - 1)][2]
+                    else "switch"
+                )
             else:
                 trl["transition"] = "first"
 
     return exp
+
 
 ########################
 #     demographics     #
@@ -169,16 +181,21 @@ def demographics(vp_info, files):
     df = pd.DataFrame()
 
     if os.path.isfile(my_file_path):
-        vp_info_cur = pd.read_csv(filepath_or_buffer = my_file_path, index_col=None)
+        vp_info_cur = pd.read_csv(filepath_or_buffer=my_file_path, index_col=None)
         vp_info_cur = vp_info_cur.to_dict(orient="list")
         vp_info_cur["age"].append(vp_info["age"])
         vp_info_cur["gender"].append(vp_info["gender"])
         vp_info_cur["handedness"].append(vp_info["handedness"])
-    else: 
-        vp_info_cur = {"age": [vp_info["age"]], "gender": [vp_info["gender"]], "handedness": [vp_info["handedness"]]}
+    else:
+        vp_info_cur = {
+            "age": [vp_info["age"]],
+            "gender": [vp_info["gender"]],
+            "handedness": [vp_info["handedness"]],
+        }
 
     df = df.from_dict(vp_info_cur)
     df.to_csv(my_file_path, header=True, index=False, sep=",", mode="w")
+
 
 ########################
 #     Instructions     #
@@ -195,6 +212,6 @@ def read_instructions(files, parameters):
                     parameters["colnames"]["col_2"].capitalize(),
                     parameters["cor_resp_dir"]["up"].capitalize(),
                     parameters["cor_resp_dir"]["down"].capitalize(),
-                    parameters["start_key"]
+                    parameters["start_key"],
                 )
     return txt_inst
