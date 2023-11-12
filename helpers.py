@@ -158,7 +158,7 @@ def randomisation(stimuli, vp_info, parameters, files):
             if itrl > 0:
                 trl["transition"] = (
                     "repetition"
-                    if stim_blk[itrl][2] == stim_blk[(itrl - 1)][2]
+                    if stim_blk[itrl][2] == stim_blk[itrl - 1][2]
                     else "switch"
                 )
             else:
@@ -182,6 +182,7 @@ def demographics(vp_info, files):
 
     if os.path.isfile(my_file_path):
         vp_info_cur = pd.read_csv(filepath_or_buffer=my_file_path, index_col=None)
+
         vp_info_cur = vp_info_cur.to_dict(orient="list")
         vp_info_cur["age"].append(vp_info["age"])
         vp_info_cur["gender"].append(vp_info["gender"])
