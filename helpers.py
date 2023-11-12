@@ -138,31 +138,49 @@ def randomisation(stimuli, vp_info, parameters, files):
             stim_blk = stimuli * int(nstim / len(stimuli))
 
         random.shuffle(stim_blk)
+        stim_blk_old = stim_blk
+        stim_blk = [random.choice(stimuli)] + stim_blk
 
-        for itrl, trl in enumerate(blk):
-            if itrl >= len(stim_blk):
+        while True:
+            sw_in = sw_co = re_in = re_co = 0
+            for itrl, trl in enumerate(blk):
+                if itrl >= len(stim_blk):
+                    break
+
+                for i in vp_info:
+                    trl[i] = vp_info[i]
+
+                trl["expname"] = files["expname"]
+                trl["blk"] = iblk + 1
+                trl["trl"] = itrl + 1
+                trl["practice"] = practice
+                trl["direction"] = stim_blk[itrl][0]
+                trl["color"] = stim_blk[itrl][1]
+                trl["task"] = stim_blk[itrl][2]
+                trl["cor_resp"] = stim_blk[itrl][3]
+                trl["congruency"] = stim_blk[itrl][4]
+                if itrl > 0:
+                    if stim_blk[itrl][2] == stim_blk[itrl - 1][2]:
+                        trl["transition"] = "repetition"
+                        if trl["congruency"] == "incongruent":
+                            re_in += 1
+                        elif trl["congruency"] == "congruent":
+                            re_co += 1
+                    else:
+                        trl["transition"] = "switch"
+                        if trl["congruency"] == "incongruent":
+                            sw_in += 1
+                        elif trl["congruency"] == "congruent":
+                            sw_co += 1
+                else:
+                    trl["transition"] = "first"
+
+            print(sw_co, sw_in, re_co, re_in)
+            if sw_co == sw_in == re_co == re_in:
                 break
-
-            for i in vp_info:
-                trl[i] = vp_info[i]
-
-            trl["expname"] = files["expname"]
-            trl["blk"] = iblk + 1
-            trl["trl"] = itrl + 1
-            trl["practice"] = practice
-            trl["direction"] = stim_blk[itrl][0]
-            trl["color"] = stim_blk[itrl][1]
-            trl["task"] = stim_blk[itrl][2]
-            trl["cor_resp"] = stim_blk[itrl][3]
-            trl["congruency"] = stim_blk[itrl][4]
-            if itrl > 0:
-                trl["transition"] = (
-                    "repetition"
-                    if stim_blk[itrl][2] == stim_blk[itrl - 1][2]
-                    else "switch"
-                )
             else:
-                trl["transition"] = "first"
+                random.shuffle(stim_blk_old)
+                stim_blk = [random.choice(stimuli)] + stim_blk_old
 
     return exp
 
