@@ -29,6 +29,7 @@ parameters = {
     "dotsize": 50,
     "ndots": 400,
     "text_size": 35,
+    "taskname": {"color": "Farbe", "direction": "Richtung"},
     "proportions": {
         "color": {"large": 0.85, "small": 0.70},
         "direction": {"large": 0.85, "small": 0.70},
@@ -120,6 +121,7 @@ inst_stim = visual.TextStim(
     win,
     text=inst_text["inst_1"],
     alignText="center",
+    # alignText="left",
     wrapWidth=(0.75 * win.size[0]),
     # bold=True,
     height=parameters["text_size"],
@@ -157,7 +159,7 @@ for blk in exp:
             # event.waitKeys(keyList=parameters["start_key"])
 
     for trl in blk:
-        task_stim.text = trl["task"]
+        task_stim.text = parameters["taskname"][trl["task"]]
         for _ in range(int(parameters["time"]["task"] * frame_rate)):
             task_stim.draw()
             win.flip()
@@ -182,10 +184,10 @@ for blk in exp:
         dots_stim.color = parameters["color"][trl["color"]]
         dots_stim.dir = parameters["dir"][trl["direction"]]
 
-        win.callOnFlip(timer.reset)
-
         event.clearEvents()
         trl_complete = False
+
+        win.callOnFlip(timer.reset)
 
         frames = 0
         slow = False

@@ -8,4 +8,4 @@ Bitte verwenden Sie in der Folge die Tasten:
 Zum Beginn jedes Durchganges wird Ihnen angezeigt, welche Aufgabe Sie bearbeiten
 sollen.
 
-um fortzufahren, drücken Sie eine beliebige Taste.
+Um fortzufahren, drücken Sie eine beliebige Taste.
