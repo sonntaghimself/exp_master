@@ -109,6 +109,7 @@ inst_text = helpers.read_instructions(files, parameters)
 ########################
 # win = visual.Window(size=(800, 800), color=(0, 0, 0), units="pix")
 win = visual.Window(color=(0, 0, 0), fullscr=True, units="pix")
+my_mouse = event.Mouse(visible=False)
 frame_rate = win.getActualFrameRate(
     nIdentical=60, nMaxFrames=100, nWarmUpFrames=10, threshold=1
 )
@@ -160,11 +161,11 @@ for blk in exp:
 
     for trl in blk:
         task_stim.text = parameters["taskname"][trl["task"]]
-        for _ in range(int(parameters["time"]["task"] * frame_rate)):
-            task_stim.draw()
-            win.flip()
         for _ in range(int(parameters["time"]["fix"] * frame_rate)):
             fix_stim.draw()
+            win.flip()
+        for _ in range(int(parameters["time"]["task"] * frame_rate)):
+            task_stim.draw()
             win.flip()
 
         dots_stim = visual.DotStim(
