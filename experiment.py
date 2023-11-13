@@ -46,7 +46,7 @@ parameters = {
 vp_info = helpers.gather_information()
 
 if vp_info["version"] == "full":
-    parameters["num"] = {"nblks": 10, "pracblks": 2, "nprac": 24, "ntrls": 64}
+    parameters["num"] = {"nblks": 10, "pracblks": 2, "nprac": 24, "ntrls": 72}
 elif vp_info["version"] == "test":
     parameters["num"] = {"nblks": 2, "pracblks": 0, "nprac": 8, "ntrls": 8}
 # NOTE: since we have 4 stimuli (and two tasks), the #of trials has to be divisible by 8 (& >= 8)
