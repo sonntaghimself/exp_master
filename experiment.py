@@ -23,7 +23,7 @@ import helpers
 #   global variables   #
 ########################
 parameters = {
-    "time": {"fix": 0.5, "feedback": 1, "iti": 0.5, "task": 1, "pres": 3},
+    "time": {"fix": 0.5, "feedback": 1, "iti": 0.5, "task": 1.5, "pres": 3},
     "keys": ["s", "l"],
     "start_key": "space",
     "dotsize": 50,
@@ -112,7 +112,7 @@ frame_rate = win.getActualFrameRate(
 )
 
 if frame_rate is None:
-    frame_rate = 60
+    frame_rate = 120
 
 timer = core.Clock()
 inst_stim = visual.TextStim(
