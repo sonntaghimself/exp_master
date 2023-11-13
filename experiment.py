@@ -109,7 +109,12 @@ inst_text = helpers.read_instructions(files, parameters)
 win = visual.Window(color=(0, 0, 0), fullscr=True, units="pix")
 timer = core.Clock()
 inst_stim = visual.TextStim(
-    win, text=inst_text["inst"], alignText="center", wrapWidth=(0.75 * win.size[0])
+    win,
+    text=inst_text["inst_1"],
+    alignText="center",
+    wrapWidth=(0.75 * win.size[0]),
+    # bold=True,
+    height=35,
 )
 fb_stim = visual.TextStim(win)
 task_stim = visual.TextStim(win)
@@ -136,9 +141,11 @@ for blk in exp:
     blk = [x for x in blk if x]  # making sure no faulty values are passed through
 
     if blk[0]["blk"] == 1:
-        inst_stim.draw()
-        win.flip()
-        event.waitKeys(keyList=parameters["start_key"])
+        for inst in range(1, 4):
+            inst_stim.text = inst_text["inst_" + str(inst)]
+            inst_stim.draw()
+            win.flip()
+            event.waitKeys(keyList=parameters["start_key"])
 
     for trl in blk:
         task_stim.text = trl["task"]
