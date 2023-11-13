@@ -23,7 +23,7 @@ import helpers
 #   global variables   #
 ########################
 parameters = {
-    "time": {"fix": 50, "feedback": 50, "iti": 30, "task": 50, "pres": 200},
+    "time": {"fix": 0.5, "feedback": 1, "iti": 0.5, "task": 1, "pres": 3},
     "keys": ["s", "l"],
     "start_key": "space",
     "dotsize": 50,
@@ -36,7 +36,7 @@ parameters = {
     # "dist_col": {"col_1": [1, 0, 0], "col_2": [0, 1, 0]},
     "dir": {"up": 90, "down": 270},
     # "dist_dir": {"up": 270, "down": 90},
-    "colnames": {"col_1": "green", "col_2": "red"},
+    "colnames": {"col_1": "blau", "col_2": "rot"},
 }
 
 ########################
@@ -107,6 +107,13 @@ inst_text = helpers.read_instructions(files, parameters)
 ########################
 # win = visual.Window(size=(800, 800), color=(0, 0, 0), units="pix")
 win = visual.Window(color=(0, 0, 0), fullscr=True, units="pix")
+frame_rate = win.getActualFrameRate(
+    nIdentical=60, nMaxFrames=100, nWarmUpFrames=10, threshold=1
+)
+
+if frame_rate is None:
+    frame_rate = 60
+
 timer = core.Clock()
 inst_stim = visual.TextStim(
     win,
@@ -150,10 +157,10 @@ for blk in exp:
 
     for trl in blk:
         task_stim.text = trl["task"]
-        for _ in range(parameters["time"]["task"]):
+        for _ in range(int(parameters["time"]["task"] * frame_rate)):
             task_stim.draw()
             win.flip()
-        for _ in range(parameters["time"]["fix"]):
+        for _ in range(int(parameters["time"]["fix"] * frame_rate)):
             fix_stim.draw()
             win.flip()
 
@@ -192,13 +199,13 @@ for blk in exp:
                 rt = timer.getTime()
                 if trl["cor_resp"] in keys:
                     corr = 1
-                    fb_stim.text = "Correct"
+                    fb_stim.text = "RICHTIG"
                 else:
                     corr = 0
-                    fb_stim.text = "Incorrect"
+                    fb_stim.text = "FALSCH"
                 trl_complete = True
 
-            if frames >= parameters["time"]["pres"]:
+            if frames >= int((parameters["time"]["pres"] * frame_rate)):
                 rt = timer.getTime()
                 fb_stim.text = "Too slow"
                 trl_complete = True
@@ -208,7 +215,7 @@ for blk in exp:
         if "escape" in keys:
             break
 
-        for _ in range(parameters["time"]["feedback"]):
+        for _ in range(int(parameters["time"]["feedback"] * frame_rate)):
             fb_stim.draw()
             win.flip()
 
@@ -216,7 +223,7 @@ for blk in exp:
         trl["rt"] = rt
         trl["corr"] = corr
 
-        for _ in range(parameters["time"]["iti"]):
+        for _ in range(int(parameters["time"]["iti"] * frame_rate)):
             win.flip()
 
     # generating end of block feeback
@@ -225,15 +232,15 @@ for blk in exp:
     corr_blk = [x["corr"] for x in blk]
     blk_per = round((corr_blk.count(1) / num_trls) * 100, 2)
 
-    fb_txt = "Block {} of {}, \n Correct: {}%".format(blk_num, len(exp), blk_per)
-    fb_txt = fb_txt + "\n\nPress the spacebar to continue."
+    fb_txt = "Block {} von {}, \n Richtig: {}%".format(blk_num, len(exp), blk_per)
+    fb_txt = fb_txt + "\n\nUm fortzufahren, drücken sie die Leertaste."
     fb_stim.text = fb_txt
     fb_stim.draw()
     win.flip()
     event.waitKeys(keyList=[parameters["start_key"]])
 
     # blank screen for inter-trial-interval
-    for _ in range(parameters["time"]["iti"]):
+    for _ in range(int(parameters["time"]["iti"] * frame_rate)):
         win.flip()
 
 ########################

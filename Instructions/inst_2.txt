@@ -1,8 +1,9 @@
 Im folgenden Experiment sollen Sie beurteilen, welche Farbe die dargestellten
 Punkte haben oder in welche Richtung sie sich bewegen.
 
-Bitte verwenden Sie in der Folge die Tasten: {} (linker Zeigefinger) und {}
-(rechter Zeigefinger), um zu antworten.
+Bitte verwenden Sie in der Folge die Tasten:
+{} (linker Zeigefinger) und
+{} (rechter Zeigefinger), um zu antworten.
 
 Zum Beginn jedes Durchganges wird Ihnen angezeigt, welche Aufgabe Sie bearbeiten
 sollen.
