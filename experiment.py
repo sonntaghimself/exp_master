@@ -23,11 +23,12 @@ import helpers
 #   global variables   #
 ########################
 parameters = {
-    "time": {"fix": 0.5, "feedback": 1, "iti": 0.5, "task": 1.5, "pres": 3},
+    "time": {"fix": 0.5, "feedback": 0.5, "iti": 0.5, "task": 1, "pres": 3},
     "keys": ["s", "l"],
     "start_key": "space",
     "dotsize": 50,
     "ndots": 400,
+    "text_size": 35,
     "proportions": {
         "color": {"large": 0.85, "small": 0.70},
         "direction": {"large": 0.85, "small": 0.70},
@@ -121,10 +122,10 @@ inst_stim = visual.TextStim(
     alignText="center",
     wrapWidth=(0.75 * win.size[0]),
     # bold=True,
-    height=35,
+    height=parameters["text_size"],
 )
-fb_stim = visual.TextStim(win)
-task_stim = visual.TextStim(win)
+fb_stim = visual.TextStim(win, height=parameters["text_size"])
+task_stim = visual.TextStim(win, height=parameters["text_size"])
 fix_stim = visual.ShapeStim(
     win,
     lineWidth=2,
