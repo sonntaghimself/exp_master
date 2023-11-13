@@ -145,7 +145,8 @@ for blk in exp:
             inst_stim.text = inst_text["inst_" + str(inst)]
             inst_stim.draw()
             win.flip()
-            event.waitKeys(keyList=parameters["start_key"])
+            event.waitKeys()
+            # event.waitKeys(keyList=parameters["start_key"])
 
     for trl in blk:
         task_stim.text = trl["task"]
@@ -222,7 +223,7 @@ for blk in exp:
     blk_num = blk[0]["blk"]
     num_trls = len(blk)
     corr_blk = [x["corr"] for x in blk]
-    blk_per = (corr_blk.count(1) / num_trls) * 100
+    blk_per = round((corr_blk.count(1) / num_trls) * 100, 2)
 
     fb_txt = "Block {} of {}, \n Correct: {}%".format(blk_num, len(exp), blk_per)
     fb_txt = fb_txt + "\n\nPress the spacebar to continue."
