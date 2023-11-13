@@ -118,10 +118,11 @@ def randomisation(stimuli, vp_info, parameters, files):
     all_blocks = parameters["num"]["pracblks"] + parameters["num"]["nblks"]
 
     if parameters["num"]["ntrls"] < len(stimuli):
-        exp = [[{} for _ in range(len(stimuli))] for _ in range(all_blocks)]
+        exp = [[{} for _ in range(len(stimuli) + 1)] for _ in range(all_blocks)]
     elif parameters["num"]["ntrls"] >= len(stimuli):
         exp = [
-            [{} for _ in range(parameters["num"]["ntrls"])] for _ in range(all_blocks)
+            [{} for _ in range((parameters["num"]["ntrls"]) + 1)]
+            for _ in range(all_blocks)
         ]
 
     for iblk, blk in enumerate(exp):
@@ -175,7 +176,7 @@ def randomisation(stimuli, vp_info, parameters, files):
                 else:
                     trl["transition"] = "first"
 
-            print(sw_co, sw_in, re_co, re_in)
+            # print(sw_co, sw_in, re_co, re_in)
             if sw_co == sw_in == re_co == re_in:
                 break
             else:
