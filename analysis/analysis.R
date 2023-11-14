@@ -22,7 +22,7 @@ ez::ezANOVA(
 ########################
 #   random analyses    #
 ########################
-m.0() <- lm(rt ~ 1, dat)
+m.0 <- lm(rt ~ 1, dat)
 m.1 <- lm(rt ~ congruency, dat)
 m.2 <- lm(rt ~ congruency + transition, dat)
 m.3 <- lm(rt ~ congruency * transition, dat)

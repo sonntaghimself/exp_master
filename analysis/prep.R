@@ -16,7 +16,8 @@ for (f in datFiles) {
 }
 
 dat %<>% filter(
-  vp_num == 1, practice == "False", transition %in% c("repetition", "switch")
+  # vp_num == 3, practice == "False", transition %in% c("repetition", "switch")
+  practice == "False", transition %in% c("repetition", "switch")
 )
 
 dat_blk <- dat %>%
