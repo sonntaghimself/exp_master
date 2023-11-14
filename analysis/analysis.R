@@ -27,12 +27,47 @@ table(dat$congruency, dat$transition)
 dat %<>% filter(corr == 1, transition %in% c("repetition", "switch"))
 
 dat$rt %>% range()
-
+################################################################################
+#                              congruency effect                               #
+################################################################################
 dat %>%
-  group_by(congruency, transition) %>%
-  summarise(meanRT = mean(rt))
+  group_by(blk, congruency) %>%
+  summarise(mean_RT = mean(rt))
 
-m.0 <- lm(rt ~ 1, dat)
+dat_blk <- dat %>%
+  filter(congruency == "congruent") %>%
+  group_by(blk) %>%
+  summarise(rt_co = mean(rt))
+
+dat_blk$rt_in <- dat %>%
+  filter(congruency == "incongruent") %>%
+  group_by(blk) %>%
+  summarise(rt_in = mean(rt)) %>%
+  select(rt_in)
+
+dat_blk %<>% mutate(cong = rt_in - rt_co) %>% select(cong)
+# # A tibble: 10 × 4
+#      blk rt_co rt_in$rt_in cong$rt_in
+#    <int> <dbl>       <dbl>      <dbl>
+#  1     3 0.747       0.800    0.0524
+#  2     4 0.620       0.653    0.0325
+#  3     5 0.601       0.708    0.106
+#  4     6 0.613       0.832    0.219
+#  5     7 0.734       0.722   -0.0124
+#  6     8 0.569       0.605    0.0365
+#  7     9 0.580       0.612    0.0318
+#  8    10 0.614       0.607   -0.00747
+#  9    11 0.634       0.745    0.111
+# 10    12 0.701       0.664   -0.0370
+
+ez::ezANOVA(
+  data = dat, dv = rt, wid = vp_num, within = c(congruency, transition)
+)
+
+########################
+#   random analyses    #
+########################
+m.0() <- lm(rt ~ 1, dat)
 m.1 <- lm(rt ~ congruency, dat)
 m.2 <- lm(rt ~ congruency + transition, dat)
 m.3 <- lm(rt ~ congruency * transition, dat)
