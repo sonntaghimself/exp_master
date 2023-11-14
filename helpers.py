@@ -26,7 +26,7 @@ information, add the current information and save the file again in a randomised
 order to guarantee anonymisation.
 """
 
-gender = ["female", "male", "non-binary", "prefer not to answer"]
+gender = ["female", "male", "diverse", "prefer not to answer"]
 
 
 ########################
