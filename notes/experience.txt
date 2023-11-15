@@ -2,5 +2,9 @@ Us:
 - found the movement task to be easier than the colors.
 - Apart, for me, the prime appeared before the fixation cross, that might've
   been a mistake.
-VP 3:
-- 
+VP 5:
+- Farbe leichter (kein Einfluss von Bewegung)
+- Bei Bewegung Einfluss von Farbe wahrgenommen.
+- Farbe wurde als leichter wahrgenommen; Bewegung als schwieriger
+- "man musste bei Bewegung genauer hinschauen."
+- Gegen Ende, Konzentration weg und schwer reinzukommen. 
