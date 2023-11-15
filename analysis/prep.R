@@ -20,6 +20,8 @@ dat %<>% filter(
   practice == "False", transition %in% c("repetition", "switch")
 )
 
+dat_corr <- dat %>% filter(corr == 1)
+
 dat_blk <- dat %>%
   filter(congruency == "congruent") %>%
   group_by(blk) %>%
