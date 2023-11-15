@@ -1,0 +1,12 @@
+Other Random-Dot experiments:
+
+Ravenzwaaij et al., 2012:
+duration: 20 min
+3 sessions, with two blocks of 200 trials.
+
+stimulus:
+- 120 dots (40 moving coherently, 80 randomly)
+
+Shenhav et al., 2018:
+- only talking about percentages of coherence in both tasks, not the absolute
+  values.
