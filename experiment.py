@@ -213,7 +213,7 @@ for blk in exp:
                 rt = timer.getTime()
                 fb_stim.text = "Too slow"
                 trl_complete = True
-                corr = 0
+                corr = 2
                 slow = True
 
         if "escape" in keys:
