@@ -17,6 +17,7 @@ new response keys: b & z
 
 """
 
+from pandas.compat.pyarrow import pa
 from psychopy import visual, event, core
 import datetime as dt
 import pandas as pd
@@ -27,7 +28,8 @@ import helpers
 ########################
 parameters = {
     # have fix with task around it; 0.75 seconds, 0.75 error feedback
-    "time": {"fix": 0.5, "feedback": 0.5, "iti": 0.5, "task": 1, "pres": 3},
+    # "time": {"fix": 0.75, "feedback": 0.75, "iti": 0.5, "task": 1, "pres": 3},
+    "time": {"fix": 0.75, "feedback": 0.75, "iti": 0.5, "pres": 3},
     "keys": ["b", "z"],
     "start_key": "space",
     "dotsize": 50,
@@ -39,23 +41,20 @@ parameters = {
         "direction": {"large": 0.85, "small": 0.70},
     },
     "color": {"col_1": [-1, -1, 1], "col_2": [1, -1, -1]},
-    # "dist_col": {"col_1": [1, 0, 0], "col_2": [0, 1, 0]},
     "dir": {"up": 90, "down": 270},
-    # "dist_dir": {"up": 270, "down": 90},
+    "dist_dir": {"up": 270, "down": 90},
     "colnames": {"col_1": "blau", "col_2": "rot"},
+}
+
+parameters["dist_col"] = {
+    "col_1": parameters["color"]["col_2"],
+    "col_2": parameters["color"]["col_1"],
 }
 
 ########################
 #    vp information    #
 ########################
 vp_info = helpers.gather_information()
-
-# TODO: new number of trials
-if vp_info["version"] == "full":
-    parameters["num"] = {"nblks": 10, "pracblks": 2, "nprac": 24, "ntrls": 72}
-elif vp_info["version"] == "test":
-    parameters["num"] = {"nblks": 2, "pracblks": 0, "nprac": 8, "ntrls": 8}
-# NOTE: since we have 4 stimuli (and two tasks), the #of trials has to be divisible by 8 (& >= 8)
 
 ########################
 #       Stimuli        #
@@ -73,18 +72,11 @@ stimuli = [
 ]
 
 if vp_info["vp_num"] % 2 == 0:
-    if vp_info["vp_num"] % 4 == 0:
-        parameters["cor_resp_col"] = {"col_1": "l", "col_2": "s"}
-        parameters["cor_resp_dir"] = {"up": "l", "down": "s"}
-    else:
-        parameters["cor_resp_col"] = {"col_1": "s", "col_2": "l"}
-        parameters["cor_resp_dir"] = {"up": "s", "down": "l"}
-elif vp_info["vp_num"] % 3 == 0:
-    parameters["cor_resp_col"] = {"col_1": "l", "col_2": "s"}
-    parameters["cor_resp_dir"] = {"up": "s", "down": "l"}
+    parameters["cor_resp_col"] = {"col_1": "z", "col_2": "b"}
+    parameters["cor_resp_dir"] = {"up": "z", "down": "b"}
 else:
-    parameters["cor_resp_col"] = {"col_1": "s", "col_2": "l"}
-    parameters["cor_resp_dir"] = {"up": "l", "down": "s"}
+    parameters["cor_resp_col"] = {"col_1": "b", "col_2": "z"}
+    parameters["cor_resp_dir"] = {"up": "z", "down": "b"}
 
 for stim in stimuli:
     if stim[2] == "color":
@@ -95,6 +87,23 @@ for stim in stimuli:
         stim.append("congruent")
     else:
         stim.append("incongruent")
+
+min_len = len(stimuli)
+
+if vp_info["version"] == "full":
+    parameters["num"] = {
+        "nblks": 10,
+        "pracblks": 2,
+        "nprac": int(2 * min_len),
+        "ntrls": int(7 * min_len),
+    }
+elif vp_info["version"] == "test":
+    parameters["num"] = {
+        "nblks": 2,
+        "pracblks": 0,
+        "nprac": min_len,
+        "ntrls": min_len,
+    }
 
 ########################
 #     import files     #
@@ -119,6 +128,12 @@ inst_text = helpers.read_instructions(files, parameters)
 ########################
 # win = visual.Window(size=(800, 800), color=(0, 0, 0), units="pix")
 win = visual.Window(color=(0, 0, 0), fullscr=True, units="pix")
+myScreenSizeX = win.size[0]
+myScreenSizeY = win.size[1]
+if win.useRetina:
+    myScreenSizeX *= 0.5
+    myScreenSizeY *= 0.5
+
 my_mouse = event.Mouse(visible=False)
 frame_rate = win.getActualFrameRate(
     nIdentical=60, nMaxFrames=100, nWarmUpFrames=10, threshold=1
@@ -133,7 +148,7 @@ inst_stim = visual.TextStim(
     text=inst_text["inst_1"],
     alignText="center",
     # alignText="left",
-    wrapWidth=(0.75 * win.size[0]),
+    wrapWidth=(0.75 * myScreenSizeX),
     # bold=True,
     height=parameters["text_size"],
 )
@@ -148,13 +163,7 @@ fix_stim = visual.ShapeStim(
     closeShape=False,
 )
 
-# dots_stim = visual.DotStim(
-#     win, dotSize=10, coherence=1, dotLife=-1, speed=1.5, units="pix",
-#     fieldSize=[win.size[1]/4, win.size[1]/4],
-#     nDots = int((parameters["ndots"]*parameters["proportions"]["color"]["small"])),
-#     fieldShape = "circle"
-# )
-
+stim_gen = parameters
 ########################
 #      Trial Loop      #
 ########################
@@ -167,7 +176,6 @@ for blk in exp:
             inst_stim.draw()
             win.flip()
             event.waitKeys()
-            # event.waitKeys(keyList=parameters["start_key"])
 
     for trl in blk:
         task_stim.text = parameters["taskname"][trl["task"]]
@@ -178,19 +186,35 @@ for blk in exp:
             task_stim.draw()
             win.flip()
 
-        dots_stim = visual.DotStim(
-            win,
-            dotSize=10,
-            coherence=1,
-            dotLife=-1,
-            speed=1.5,
-            units="pix",
-            fieldSize=[win.size[1] / 4, win.size[1] / 4],
-            nDots=int(
-                (parameters["ndots"] * parameters["proportions"]["color"]["small"])
-            ),
-            fieldShape="circle",
-        )
+        stim_list = []
+        for stim_num in range(helpers.StimNum(parameters)):
+        # dots_stim = visual.DotStim(
+        #     win,
+        #     dotSize=10,
+        #     coherence=1,
+        #     dotLife=-1,
+        #     speed=1.5,
+        #     units="pix",
+        #     fieldSize=[myScreenSizeY / 2, myScreenSizeY / 2],
+        #     nDots=int(
+        #         (parameters["ndots"] * parameters["proportions"]["color"]["small"])
+        #     ),
+        #     fieldShape="circle",
+        # )
+        #
+        # dots_dist = visual.DotStim(
+        #     win,
+        #     dotSize=10,
+        #     coherence=1,
+        #     dotLife=-1,
+        #     speed=1.5,
+        #     units="pix",
+        #     fieldSize=[myScreenSizeY / 2, myScreenSizeY / 2],
+        #     nDots=int(
+        #         (parameters["ndots"] * parameters["proportions"]["color"]["small"])
+        #     ),
+        #     fieldShape="circle",
+        # )
 
         dots_stim.color = parameters["color"][trl["color"]]
         dots_stim.dir = parameters["dir"][trl["direction"]]
@@ -213,7 +237,6 @@ for blk in exp:
                 rt = timer.getTime()
                 if trl["cor_resp"] in keys:
                     corr = 1
-                    fb_stim.text = "RICHTIG"
                 else:
                     corr = 0
                     fb_stim.text = "FALSCH"
@@ -229,9 +252,10 @@ for blk in exp:
         if "escape" in keys:
             break
 
-        for _ in range(int(parameters["time"]["feedback"] * frame_rate)):
-            fb_stim.draw()
-            win.flip()
+        if corr != 1:
+            for _ in range(int(parameters["time"]["feedback"] * frame_rate)):
+                fb_stim.draw()
+                win.flip()
 
         trl["date"] = dt.datetime.now().strftime("%d-%m-%Y-%H:%M:%S")
         trl["rt"] = rt

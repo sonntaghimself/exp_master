@@ -1,3 +1,4 @@
+from bidi import main
 from psychopy import gui
 import datetime as dt
 import os
@@ -143,7 +144,7 @@ def randomisation(stimuli, vp_info, parameters, files):
         stim_blk = [random.choice(stimuli)] + stim_blk
 
         while True:
-            sw_in = sw_co = re_in = re_co = 0
+            sw_in = sw_co = re_in = re_co = sw_easy = sw_hard = re_easy = re_hard = 0
             for itrl, trl in enumerate(blk):
                 if itrl >= len(stim_blk):
                     break
@@ -158,8 +159,9 @@ def randomisation(stimuli, vp_info, parameters, files):
                 trl["direction"] = stim_blk[itrl][0]
                 trl["color"] = stim_blk[itrl][1]
                 trl["task"] = stim_blk[itrl][2]
-                trl["cor_resp"] = stim_blk[itrl][3]
-                trl["congruency"] = stim_blk[itrl][4]
+                trl["difficulty"] = stim_blk[itrl][3]
+                trl["cor_resp"] = stim_blk[itrl][4]
+                trl["congruency"] = stim_blk[itrl][5]
                 if itrl > 0:
                     if stim_blk[itrl][2] == stim_blk[itrl - 1][2]:
                         trl["transition"] = "repetition"
@@ -167,17 +169,34 @@ def randomisation(stimuli, vp_info, parameters, files):
                             re_in += 1
                         elif trl["congruency"] == "congruent":
                             re_co += 1
+                        if trl["difficulty"] == "hard":
+                            re_hard += 1
+                        elif trl["difficulty"] == "easy":
+                            re_easy += 1
                     else:
                         trl["transition"] = "switch"
                         if trl["congruency"] == "incongruent":
                             sw_in += 1
                         elif trl["congruency"] == "congruent":
                             sw_co += 1
+                        if trl["difficulty"] == "hard":
+                            sw_hard += 1
+                        elif trl["difficulty"] == "easy":
+                            sw_easy += 1
                 else:
                     trl["transition"] = "first"
 
             # print(sw_co, sw_in, re_co, re_in)
-            if sw_co == sw_in == re_co == re_in:
+            if (
+                sw_co
+                == sw_in
+                == re_co
+                == re_in
+                == sw_easy
+                == sw_hard
+                == re_easy
+                == re_hard
+            ):
                 break
             else:
                 random.shuffle(stim_blk_old)
@@ -242,3 +261,57 @@ def read_instructions(files, parameters):
                         parameters["cor_resp_dir"]["down"].capitalize(),
                     )
     return txt_inst
+
+
+########################
+#     Stimulus gen     #
+########################
+def StimNum(parameters):
+    stim_num = None
+
+    while True:
+        print(stim_num)
+        if stim_num is None:
+            stim_num = 2
+        else:
+            stim_num += 1
+
+        if (
+            int(parameters["proportions"]["color"]["hard"] * 100) % stim_num == 0
+            and int(parameters["proportions"]["color"]["easy"] * 100) % stim_num == 0
+            and int(parameters["proportions"]["direction"]["hard"] * 100) % stim_num
+            == 0
+            and int(parameters["proportions"]["direction"]["easy"] * 100) % stim_num
+            == 0
+            and int(parameters["proportions"]["distractor"] * 100) % stim_num == 0
+        ):
+            break
+
+    return stim_num
+
+
+if __name__ == "__main__":
+    parameters = {
+        "time": {"fix": 0.75, "feedback": 0.75, "iti": 0.5, "pres": 3},
+        "keys": ["b", "z"],
+        "start_key": "space",
+        "dotsize": 50,
+        "ndots": 400,
+        "text_size": 35,
+        "taskname": {"color": "Farbe", "direction": "Richtung"},
+        "proportions": {
+            "color": {"hard": 0.85, "easy": 0.70},
+            "direction": {"hard": 0.85, "easy": 0.70},
+            "distractor": 0.9,
+        },
+        "color": {"col_1": [-1, -1, 1], "col_2": [1, -1, -1]},
+        "dir": {"up": 90, "down": 270},
+        "dist_dir": {"up": 270, "down": 90},
+        "colnames": {"col_1": "blau", "col_2": "rot"},
+    }
+    parameters["dist_col"] = {
+        "col_1": parameters["color"]["col_2"],
+        "col_2": parameters["color"]["col_1"],
+    }
+
+    stim_gen(parameters)
