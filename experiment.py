@@ -12,6 +12,9 @@ As DV, at this point, only Reaction time (and error commission) are recorded.
 
 To start with, helpers will be imported and the participant information stored
 in a seperate file (order will be randomized to assure anonymity)
+
+new response keys: b & z
+
 """
 
 from psychopy import visual, event, core
@@ -23,8 +26,9 @@ import helpers
 #   global variables   #
 ########################
 parameters = {
+    # have fix with task around it; 0.75 seconds, 0.75 error feedback
     "time": {"fix": 0.5, "feedback": 0.5, "iti": 0.5, "task": 1, "pres": 3},
-    "keys": ["s", "l"],
+    "keys": ["b", "z"],
     "start_key": "space",
     "dotsize": 50,
     "ndots": 400,
@@ -46,6 +50,7 @@ parameters = {
 ########################
 vp_info = helpers.gather_information()
 
+# TODO: new number of trials
 if vp_info["version"] == "full":
     parameters["num"] = {"nblks": 10, "pracblks": 2, "nprac": 24, "ntrls": 72}
 elif vp_info["version"] == "test":
@@ -58,8 +63,13 @@ elif vp_info["version"] == "test":
 dir = ["up", "down"]
 col = ["col_1", "col_2"]
 tsk = ["color", "direction"]
+dif = ["easy", "hard"]
 stimuli = [
-    [direction, color, task] for direction in dir for color in col for task in tsk
+    [direction, color, task, difficulty]
+    for direction in dir
+    for color in col
+    for task in tsk
+    for difficulty in dif
 ]
 
 if vp_info["vp_num"] % 2 == 0:
@@ -209,7 +219,7 @@ for blk in exp:
                     fb_stim.text = "FALSCH"
                 trl_complete = True
 
-            if frames >= int((parameters["time"]["pres"] * frame_rate)):
+            elif frames >= int((parameters["time"]["pres"] * frame_rate)):
                 rt = timer.getTime()
                 fb_stim.text = "Too slow"
                 trl_complete = True
