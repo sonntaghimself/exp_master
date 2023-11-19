@@ -51,6 +51,8 @@ parameters["dist_col"] = {
     "col_2": parameters["color"]["col_1"],
 }
 
+parameters["StimNum"] = helpers.StimNum(parameters)
+
 ########################
 #    vp information    #
 ########################
@@ -186,8 +188,16 @@ for blk in exp:
             task_stim.draw()
             win.flip()
 
-        stim_list = []
-        for stim_num in range(helpers.StimNum(parameters)):
+
+        # list of colors and directions (col1, col1, col1, col2, col2) for prop
+
+        parameters[]
+
+        col_list = []
+        dir_list = []
+
+        for stim_num in range(parameters["StimNum"]):
+            
         # dots_stim = visual.DotStim(
         #     win,
         #     dotSize=10,
