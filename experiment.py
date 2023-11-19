@@ -29,7 +29,7 @@ parameters = {
     # have fix with task around it; 0.75 seconds, 0.75 error feedback
     # "time": {"fix": 0.75, "feedback": 0.75, "iti": 0.5, "task": 1, "pres": 3},
     "time": {"fix": 0.75, "feedback": 0.75, "iti": 0.5, "pres": 3},
-    "keys": ["b", "z"],
+    "keys": ["t", "v"],
     "start_key": "space",
     "dotsize": 50,
     "ndots": 200,
@@ -44,6 +44,7 @@ parameters = {
     "dir": {"up": 90, "down": 270},
     "dist_dir": {"up": 270, "down": 90},
     "colnames": {"col_1": "blau", "col_2": "rot"},
+    "cor_resp_dir": {"up": "t", "down": "v"},
 }
 
 parameters["dist_col"] = {
@@ -74,11 +75,15 @@ stimuli = [
 ]
 
 if vp_info["vp_num"] % 2 == 0:
-    parameters["cor_resp_col"] = {"col_1": "z", "col_2": "b"}
-    parameters["cor_resp_dir"] = {"up": "z", "down": "b"}
+    parameters["cor_resp_col"] = {
+        "col_1": parameters["keys"][0],
+        "col_2": parameters["keys"][1],
+    }
 else:
-    parameters["cor_resp_col"] = {"col_1": "b", "col_2": "z"}
-    parameters["cor_resp_dir"] = {"up": "z", "down": "b"}
+    parameters["cor_resp_col"] = {
+        "col_1": parameters["keys"][1],
+        "col_2": parameters["keys"][0],
+    }
 
 for stim in stimuli:
     if stim[2] == "color":
@@ -185,18 +190,12 @@ for blk in exp:
             win.flip()
             event.waitKeys()
 
-    for trl in blk:  ###TODO: rearrange this process here,
+    for trl in blk:
         task_stim_0.text = task_stim_1.text = parameters["taskname"][trl["task"]]
         for _ in range(int(parameters["time"]["fix"] * frame_rate)):
-            # task_stim_0.draw()
-            # task_stim_1.draw()
-            # fix_stim.draw()
             for item in fix_list:
                 item.draw()
             win.flip()
-        # for _ in range(int(parameters["time"]["task"] * frame_rate)):
-        # task_stim.draw()
-        # win.flip()
 
         if trl["task"] == "direction":
             n_stim = parameters["proportions"]["distractor"] * parameters["ndots"]
@@ -232,44 +231,6 @@ for blk in exp:
             nDots=int(parameters["ndots"] - n_stim),
             fieldShape="circle",
         )
-
-        # {{{ New list procedure
-        # list of colors and directions (col1, col1, col1, col2, col2) for prop
-
-        # parameters[]
-        #
-        # col_list = []
-        # dir_list = []
-        #
-        # for stim_num in range(parameters["StimNum"]):
-
-        # dots_stim = visual.DotStim(
-        #     win,
-        #     dotSize=10,
-        #     coherence=1,
-        #     dotLife=-1,
-        #     speed=1.5,
-        #     units="pix",
-        #     fieldSize=[myScreenSizeY / 2, myScreenSizeY / 2],
-        #     nDots=int(
-        #         (parameters["ndots"] * parameters["proportions"]["color"]["small"])
-        #     ),
-        #     fieldShape="circle",
-        # )
-        #
-        # dots_dist = visual.DotStim(
-        #     win,
-        #     dotSize=10,
-        #     coherence=1,
-        #     dotLife=-1,
-        #     speed=1.5,
-        #     units="pix",
-        #     fieldSize=[myScreenSizeY / 2, myScreenSizeY / 2],
-        #     nDots=int(
-        #         (parameters["ndots"] * parameters["proportions"]["color"]["small"])
-        #     ),
-        #     fieldShape="circle",
-        # )}}}
 
         dots_stim.color = parameters["color"][trl["color"]]
         dots_stim.dir = dots_stim_alt.dir = parameters["dir"][trl["direction"]]
