@@ -17,7 +17,6 @@ new response keys: b & z
 
 """
 
-from pandas.compat.pyarrow import pa
 from psychopy import visual, event, core
 import datetime as dt
 import pandas as pd
@@ -37,8 +36,9 @@ parameters = {
     "text_size": 35,
     "taskname": {"color": "Farbe", "direction": "Richtung"},
     "proportions": {
-        "color": {"large": 0.85, "small": 0.70},
-        "direction": {"large": 0.85, "small": 0.70},
+        "color": {"hard": 0.85, "easy": 0.70},
+        "direction": {"hard": 0.85, "easy": 0.70},
+        "distractor": 0.95,
     },
     "color": {"col_1": [-1, -1, 1], "col_2": [1, -1, -1]},
     "dir": {"up": 90, "down": 270},
@@ -179,25 +179,60 @@ for blk in exp:
             win.flip()
             event.waitKeys()
 
-    for trl in blk:
+    for trl in blk:  ###TODO: rearrange this process here,
         task_stim.text = parameters["taskname"][trl["task"]]
         for _ in range(int(parameters["time"]["fix"] * frame_rate)):
             fix_stim.draw()
             win.flip()
-        for _ in range(int(parameters["time"]["task"] * frame_rate)):
-            task_stim.draw()
-            win.flip()
+        # for _ in range(int(parameters["time"]["task"] * frame_rate)):
+        # task_stim.draw()
+        # win.flip()
 
+        if trl["task"] == "direction":
+            n_stim = parameters["proportions"]["distractor"] * parameters["ndots"]
+            my_coherence = parameters["proportions"][trl["task"]][trl["difficulty"]]
 
+        elif trl["task"] == "color":
+            n_stim = (
+                parameters["proportions"][trl["task"]][trl["difficulty"]]
+                * parameters["ndots"]
+            )
+            my_coherence = parameters["proportions"]["distractor"]
+
+        dots_stim = visual.DotStim(
+            win,
+            dotSize=10,
+            coherence=my_coherence,
+            dotLife=-1,
+            speed=1.5,
+            units="pix",
+            fieldSize=[myScreenSizeY / 2, myScreenSizeY / 2],
+            nDots=int(n_stim),
+            fieldShape="circle",
+        )
+
+        dots_stim_alt = visual.DotStim(
+            win,
+            dotSize=10,
+            coherence=my_coherence,
+            dotLife=-1,
+            speed=1.5,
+            units="pix",
+            fieldSize=[myScreenSizeY / 2, myScreenSizeY / 2],
+            nDots=int(parameters["ndots"] - n_stim),
+            fieldShape="circle",
+        )
+
+        # {{{ New list procedure
         # list of colors and directions (col1, col1, col1, col2, col2) for prop
 
-        parameters[]
+        # parameters[]
+        #
+        # col_list = []
+        # dir_list = []
+        #
+        # for stim_num in range(parameters["StimNum"]):
 
-        col_list = []
-        dir_list = []
-
-        for stim_num in range(parameters["StimNum"]):
-            
         # dots_stim = visual.DotStim(
         #     win,
         #     dotSize=10,
@@ -224,10 +259,11 @@ for blk in exp:
         #         (parameters["ndots"] * parameters["proportions"]["color"]["small"])
         #     ),
         #     fieldShape="circle",
-        # )
+        # )}}}
 
         dots_stim.color = parameters["color"][trl["color"]]
-        dots_stim.dir = parameters["dir"][trl["direction"]]
+        dots_stim.dir = dots_stim_alt.dir = parameters["dir"][trl["direction"]]
+        dots_stim_alt.color = parameters["dist_col"][trl["color"]]
 
         event.clearEvents()
         trl_complete = False
@@ -239,6 +275,7 @@ for blk in exp:
 
         while not trl_complete:
             dots_stim.draw()
+            dots_stim_alt.draw()
             win.flip()
             frames += 1
             keys = []
