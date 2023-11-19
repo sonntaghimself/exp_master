@@ -1,14 +1,10 @@
-# exp_master
+# UNDER MAINTENANCE
 
-This is the preliminary version of our first Experiment for the Master's Thesis.
+This Version of our experiment is no longer running.
+Changes that were decided on today (16.11.) are being implemented at the moment.
 
-This is the behavioral pilot version.
-
-There is no conflict within the tasks. Conflict arises through the response
-congruency between color and movement task.
-
-TODO:
-- Instructions need to be rewritten, and increased in size. -> Maybe have them be on 2-3 pages
-- Checking the required number of Dots (nDots), in one experiment, they used only 120
-- reconsidering the speed of movement.
-- Configuring a consistent measurement of frame rate.
+__*These Include*__:
+- Changed proportions. -> In the relevant task, difficulty is manipulated through two different degrees of coherence (independently for each task); In the irrelevant task, a constant degree of coherence is being implemented.
+- The response mapping is changed from S & L, to B and Z.
+- The Times and presentation kind of the fixation cross have been changed; Now, the task will be displayed above and below the fixation cross in a combined display.
+- There will only be feedback on Error commissions. No longer on correct trials.
