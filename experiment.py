@@ -32,13 +32,13 @@ parameters = {
     "keys": ["b", "z"],
     "start_key": "space",
     "dotsize": 50,
-    "ndots": 400,
+    "ndots": 200,
     "text_size": 35,
     "taskname": {"color": "Farbe", "direction": "Richtung"},
     "proportions": {
-        "color": {"hard": 0.85, "easy": 0.70},
-        "direction": {"hard": 0.85, "easy": 0.70},
-        "distractor": 0.95,
+        "color": {"hard": 0.65, "easy": 0.85},
+        "direction": {"hard": 0.4, "easy": 0.85},
+        "distractor": 0.90,
     },
     "color": {"col_1": [-1, -1, 1], "col_2": [1, -1, -1]},
     "dir": {"up": 90, "down": 270},
@@ -155,7 +155,8 @@ inst_stim = visual.TextStim(
     height=parameters["text_size"],
 )
 fb_stim = visual.TextStim(win, height=parameters["text_size"])
-task_stim = visual.TextStim(win, height=parameters["text_size"])
+task_stim_0 = visual.TextStim(win, height=parameters["text_size"])
+task_stim_1 = visual.TextStim(win, height=parameters["text_size"])
 fix_stim = visual.ShapeStim(
     win,
     lineWidth=2,
@@ -164,6 +165,11 @@ fix_stim = visual.ShapeStim(
     vertices=((-10, 0), (10, 0), (0, 0), (0, 10), (0, -10)),
     closeShape=False,
 )
+
+task_stim_0.pos = (0, (myScreenSizeY / 12))
+task_stim_1.pos = (0, -(myScreenSizeY / 12))
+
+fix_list = [fix_stim, task_stim_0, task_stim_1]
 
 stim_gen = parameters
 ########################
@@ -180,9 +186,13 @@ for blk in exp:
             event.waitKeys()
 
     for trl in blk:  ###TODO: rearrange this process here,
-        task_stim.text = parameters["taskname"][trl["task"]]
+        task_stim_0.text = task_stim_1.text = parameters["taskname"][trl["task"]]
         for _ in range(int(parameters["time"]["fix"] * frame_rate)):
-            fix_stim.draw()
+            # task_stim_0.draw()
+            # task_stim_1.draw()
+            # fix_stim.draw()
+            for item in fix_list:
+                item.draw()
             win.flip()
         # for _ in range(int(parameters["time"]["task"] * frame_rate)):
         # task_stim.draw()
