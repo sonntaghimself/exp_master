@@ -79,10 +79,20 @@ if vp_info["vp_num"] % 2 == 0:
         "col_1": parameters["keys"][0],
         "col_2": parameters["keys"][1],
     }
+
+    parameters["cor_col_resp"] = {
+        parameters["keys"][0]: parameters["colnames"]["col_1"],
+        parameters["keys"][1]: parameters["colnames"]["col_2"],
+    }
 else:
     parameters["cor_resp_col"] = {
         "col_1": parameters["keys"][1],
         "col_2": parameters["keys"][0],
+    }
+
+    parameters["cor_col_resp"] = {
+        parameters["keys"][0]: parameters["colnames"]["col_2"],
+        parameters["keys"][1]: parameters["colnames"]["col_1"],
     }
 
 for stim in stimuli:
@@ -118,7 +128,7 @@ elif vp_info["version"] == "test":
 files = helpers.my_files(vp_info)
 
 # Storing demographics
-helpers.demographics(vp_info, files)
+# helpers.demographics(vp_info, files)
 
 ########################
 #      Trial Seq       #
@@ -171,8 +181,8 @@ fix_stim = visual.ShapeStim(
     closeShape=False,
 )
 
-task_stim_0.pos = (0, (myScreenSizeY / 12))
-task_stim_1.pos = (0, -(myScreenSizeY / 12))
+task_stim_0.pos = (0, inst_stim.height)
+task_stim_1.pos = (0, -(inst_stim.height))
 
 fix_list = [fix_stim, task_stim_0, task_stim_1]
 
@@ -184,11 +194,20 @@ for blk in exp:
     blk = [x for x in blk if x]  # making sure no faulty values are passed through
 
     if blk[0]["blk"] == 1:
-        for inst in range(1, 4):
+        for inst in range(1, 3):
             inst_stim.text = inst_text["inst_" + str(inst)]
             inst_stim.draw()
             win.flip()
             event.waitKeys()
+        for inst in range(3, 5):
+            inst_stim.text = inst_text["inst_" + str(inst)]
+            if inst < 4:
+                inst_stim.pos = (0, myScreenSizeY / 5)
+            else:
+                inst_stim.pos = (0, -(myScreenSizeY / 5))
+            inst_stim.draw()
+        win.flip()
+        event.waitKeys()
 
     for trl in blk:
         task_stim_0.text = task_stim_1.text = parameters["taskname"][trl["task"]]

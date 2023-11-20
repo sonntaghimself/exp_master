@@ -1,9 +1,4 @@
-Im Falle der Farb-Aufgabe, antworten Sie bitte mit: 
-{} bei der Farbe {} und mit
-{} auf die Farbe {}.
+Antworten Sie bitte mit der Taste {}, wenn:
 
-Bei der Bewegungs-Aufgabe, antworten Sie bitte mit: 
-{}, wenn sich die Punkte nach oben bewegen und mit 
-{}, wenn sie sich nach unten bewegen.
-
-Drücken Sie eine beliebige Taste, um das Experiment zu starten.
+Die Mehrheit der Punkte {} ist (Farbaufgabe).
+Die Mehrheit der Punkte sich nach oben bewegt (Bewegungsaufgabe).

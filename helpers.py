@@ -246,19 +246,24 @@ def read_instructions(files, parameters):
             with open(os.path.join(files["insdir"], inst), "r") as f:
                 if inst == "inst_1.txt":
                     txt_inst[os.path.splitext(inst)[0]] = f.read()
-                if inst == "inst_2.txt":
+                elif inst == "inst_2.txt":
                     txt_inst[os.path.splitext(inst)[0]] = f.read().format(
                         parameters["keys"][0].capitalize(),
                         parameters["keys"][1].capitalize(),
                     )
-                if inst == "inst_3.txt":
+                elif inst == "inst_3.txt":
                     txt_inst[os.path.splitext(inst)[0]] = f.read().format(
-                        parameters["cor_resp_col"]["col_1"].capitalize(),
-                        parameters["colnames"]["col_1"].capitalize(),
-                        parameters["cor_resp_col"]["col_2"].capitalize(),
-                        parameters["colnames"]["col_2"].capitalize(),
                         parameters["cor_resp_dir"]["up"].capitalize(),
+                        parameters["cor_col_resp"][
+                            parameters["cor_resp_dir"]["up"]
+                        ].capitalize(),
+                    )
+                elif inst == "inst_4.txt":
+                    txt_inst[os.path.splitext(inst)[0]] = f.read().format(
                         parameters["cor_resp_dir"]["down"].capitalize(),
+                        parameters["cor_col_resp"][
+                            parameters["cor_resp_dir"]["down"]
+                        ].capitalize(),
                     )
     return txt_inst
 

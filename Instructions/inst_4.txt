@@ -1,0 +1,6 @@
+Antworten Sie bitte mit der Taste {}, wenn:
+
+Die Mehrheit der Punkte {} ist (Farbaufgabe).
+Die Mehrheit der Punkte sich nach unten bewegt (Bewegungsaufgabe).
+
+Um fortzufahren, drücken Sie eine beliebige Taste.
