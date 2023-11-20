@@ -52,7 +52,7 @@ parameters["dist_col"] = {
     "col_2": parameters["color"]["col_1"],
 }
 
-parameters["StimNum"] = helpers.StimNum(parameters)
+# parameters["StimNum"] = helpers.StimNum(parameters)
 
 ########################
 #    vp information    #

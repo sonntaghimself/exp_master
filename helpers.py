@@ -275,7 +275,8 @@ def StimNum(parameters):
     stim_num = None
 
     while True:
-        print(stim_num)
+        if __name__ == "__main__":
+            print(stim_num)
         if stim_num is None:
             stim_num = 2
         else:
