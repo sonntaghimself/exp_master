@@ -84,6 +84,7 @@ def my_files(vp_info):
     files["expname"] = os.path.basename(files["dirname"])
     files["date"] = dt.datetime.today().strftime("%d/%m/%Y")
     files["insdir"] = files["dirname"] + os.sep + "Instructions"
+    files["blkdir"] = files["dirname"] + os.sep + "Block"
     files["resdir"] = files["dirname"] + os.sep + "Results"
     files["demo"] = files["dirname"] + os.sep + "Demographics"
 
@@ -266,6 +267,32 @@ def read_instructions(files, parameters):
                         ].capitalize(),
                     )
     return txt_inst
+
+
+########################
+#     Block Screen     #
+########################
+def block_screen(start, block, par, files):
+    blk_num = block[0]["blk"]
+    if start:
+        with open(os.path.join(files["blkdir"], "BlkStart.txt"), "r") as f:
+            BlkText = f.read().format(
+                blk_num,
+                par["exp_len"],
+                par["cor_resp_dir"]["up"].capitalize(),
+                par["cor_col_resp"][par["cor_resp_dir"]["up"]].capitalize(),
+                par["cor_resp_dir"]["down"].capitalize(),
+                par["cor_col_resp"][par["cor_resp_dir"]["down"]].capitalize(),
+                blk_num,
+            )
+    else:
+        num_trls = len(block)
+        corr_blk = [x["corr"] for x in block]
+        blk_per = round((corr_blk.count(1) / num_trls) * 100, 2)
+        with open(os.path.join(files["blkdir"], "BlkStart.txt"), "r") as f:
+            BlkText = f.read().format(blk_num, par["exp_len"], blk_per)
+
+    return BlkText
 
 
 ########################

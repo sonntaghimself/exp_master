@@ -1,0 +1,16 @@
+Anfang Block {} von {}:
+
+Antworten Sie bitte mit der Taste {}, wenn:
+
+Die Mehrheit der Punkte {} ist (Farbaufgabe).
+Die Mehrheit der Punkte sich nach oben bewegt (Bewegungsaufgabe).
+
+
+
+Antworten Sie bitte mit der Taste {}, wenn:
+
+Die Mehrheit der Punkte {} ist (Farbaufgabe).
+Die Mehrheit der Punkte sich nach unten bewegt (Bewegungsaufgabe).
+
+
+Drücken Sie eine beliebige Taste, um mit Block {} zu beginnen.

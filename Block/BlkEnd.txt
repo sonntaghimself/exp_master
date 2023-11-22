@@ -1,0 +1,5 @@
+Ende Block {} von {}:
+
+Richtig: {}
+
+Um fortzufahren, drücken Sie eine beliebige Taste.

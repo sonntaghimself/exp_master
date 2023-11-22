@@ -114,6 +114,7 @@ if vp_info["version"] == "full":
         "nprac": int(2 * min_len),
         "ntrls": int(7 * min_len),
     }
+    parameters["exp_len"] = 12
 elif vp_info["version"] == "test":
     parameters["num"] = {
         "nblks": 2,
@@ -121,6 +122,7 @@ elif vp_info["version"] == "test":
         "nprac": min_len,
         "ntrls": min_len,
     }
+    parameters["exp_len"] = 2
 
 ########################
 #     import files     #
@@ -170,6 +172,9 @@ inst_stim = visual.TextStim(
     height=parameters["text_size"],
 )
 fb_stim = visual.TextStim(win, height=parameters["text_size"])
+BlkStim = visual.TextStim(
+    win, height=parameters["text_size"], wrapWidth=(0.75 * myScreenSizeX)
+)
 task_stim_0 = visual.TextStim(win, height=parameters["text_size"])
 task_stim_1 = visual.TextStim(win, height=parameters["text_size"])
 fix_stim = visual.ShapeStim(
@@ -208,6 +213,11 @@ for blk in exp:
             inst_stim.draw()
         win.flip()
         event.waitKeys()
+
+    BlkStim.text = helpers.block_screen(True, blk, parameters, files)
+    BlkStim.draw()
+    win.flip()
+    event.waitKeys()
 
     for trl in blk:
         task_stim_0.text = task_stim_1.text = parameters["taskname"][trl["task"]]
@@ -302,17 +312,11 @@ for blk in exp:
             win.flip()
 
     # generating end of block feeback
-    blk_num = blk[0]["blk"]
-    num_trls = len(blk)
-    corr_blk = [x["corr"] for x in blk]
-    blk_per = round((corr_blk.count(1) / num_trls) * 100, 2)
-
-    fb_txt = "Block {} von {}, \n Richtig: {}%".format(blk_num, len(exp), blk_per)
-    fb_txt = fb_txt + "\n\nUm fortzufahren, drücken sie die Leertaste."
-    fb_stim.text = fb_txt
-    fb_stim.draw()
+    BlkStim.text = helpers.block_screen(False, blk, parameters, files)
+    BlkStim.draw()
     win.flip()
-    event.waitKeys(keyList=[parameters["start_key"]])
+    event.waitKeys()
+    # event.waitKeys(keyList=[parameters["start_key"]])
 
     # blank screen for inter-trial-interval
     for _ in range(int(parameters["time"]["iti"] * frame_rate)):
