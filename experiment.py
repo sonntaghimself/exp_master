@@ -13,7 +13,7 @@ As DV, at this point, only Reaction time (and error commission) are recorded.
 To start with, helpers will be imported and the participant information stored
 in a seperate file (order will be randomized to assure anonymity)
 
-new response keys: b & z
+new response keys: t & v
 
 """
 

@@ -47,3 +47,5 @@ plot(delta_combined,
 
 title(main = "Delta Plots", ylab = "Conflict Effect [ms]")
 legend(300, 150, legend = c("Switch", "Repeat"), col = c("black", "grey"), lty = 1)
+
+DMCfun::dmcFit(delta_combined, nDelta = 9)
