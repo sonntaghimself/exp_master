@@ -15,6 +15,11 @@ in a seperate file (order will be randomized to assure anonymity)
 
 new response keys: t & v
 
+In accordance with prior research, we chose .25 and .75 as coherence for  the
+movement task.
+
+We chose 62.5% and 87.5% for the color task, since mathematically argued, the
+amount of evidence is equivalent to the movement task.
 """
 
 from psychopy import visual, event, core
@@ -36,9 +41,9 @@ parameters = {
     "text_size": 35,
     "taskname": {"color": "Farbe", "direction": "Richtung"},
     "proportions": {
-        "color": {"hard": 0.65, "easy": 0.85},
-        "direction": {"hard": 0.04, "easy": 0.64},
-        "distractor": 0.90,
+        "color": {"hard": 0.625, "easy": 0.875},
+        "direction": {"hard": 0.25, "easy": 0.75},
+        "distractor": {"color": 0.90, "direction": 0.8},
     },
     "color": {"col_1": [5, 137, 255], "col_2": [255, 65, 2]},
     # "color": {"col_1": [-1, -1, 1], "col_2": [1, -1, -1]},
@@ -228,7 +233,9 @@ for blk in exp:
             win.flip()
 
         if trl["task"] == "direction":
-            n_stim = parameters["proportions"]["distractor"] * parameters["ndots"]
+            n_stim = (
+                parameters["proportions"]["distractor"]["color"] * parameters["ndots"]
+            )
             my_coherence = parameters["proportions"][trl["task"]][trl["difficulty"]]
 
         elif trl["task"] == "color":
@@ -236,7 +243,7 @@ for blk in exp:
                 parameters["proportions"][trl["task"]][trl["difficulty"]]
                 * parameters["ndots"]
             )
-            my_coherence = parameters["proportions"]["distractor"]
+            my_coherence = parameters["proportions"]["distractor"]["direction"]
 
         dots_stim = visual.DotStim(
             win,

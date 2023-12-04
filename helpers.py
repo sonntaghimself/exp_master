@@ -1,4 +1,3 @@
-from bidi import main
 from psychopy import gui
 import datetime as dt
 import os
@@ -289,7 +288,7 @@ def block_screen(start, block, par, files):
         num_trls = len(block)
         corr_blk = [x["corr"] for x in block]
         blk_per = round((corr_blk.count(1) / num_trls) * 100, 2)
-        with open(os.path.join(files["blkdir"], "BlkStart.txt"), "r") as f:
+        with open(os.path.join(files["blkdir"], "BlkEnd.txt"), "r") as f:
             BlkText = f.read().format(blk_num, par["exp_len"], blk_per)
 
     return BlkText
