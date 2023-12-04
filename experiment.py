@@ -20,6 +20,14 @@ movement task.
 
 We chose 62.5% and 87.5% for the color task, since mathematically argued, the
 amount of evidence is equivalent to the movement task.
+
+The same train of thought was also applied to the coherence/proportion in the
+distractor condition. the 90% for the color task were adjusted to it's
+equivalent in the direction task.
+
+estimated duration: 
+(144 * 10 * (0.75 + (0.2 * .75) + 0.5 + 0.5)) / 60
+~ 45.6 Minutes
 """
 
 from psychopy import visual, event, core
@@ -118,7 +126,7 @@ if vp_info["version"] == "full":
         "nblks": 10,
         "pracblks": 2,
         "nprac": int(2 * min_len),
-        "ntrls": int(7 * min_len),
+        "ntrls": int(9 * min_len),
     }
     parameters["exp_len"] = 12
 elif vp_info["version"] == "test":
