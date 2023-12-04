@@ -37,10 +37,11 @@ parameters = {
     "taskname": {"color": "Farbe", "direction": "Richtung"},
     "proportions": {
         "color": {"hard": 0.65, "easy": 0.85},
-        "direction": {"hard": 0.4, "easy": 0.85},
+        "direction": {"hard": 0.04, "easy": 0.64},
         "distractor": 0.90,
     },
-    "color": {"col_1": [-1, -1, 1], "col_2": [1, -1, -1]},
+    "color": {"col_1": [5, 137, 255], "col_2": [255, 65, 2]},
+    # "color": {"col_1": [-1, -1, 1], "col_2": [1, -1, -1]},
     "dir": {"up": 90, "down": 270},
     "dist_dir": {"up": 270, "down": 90},
     "colnames": {"col_1": "blau", "col_2": "rot"},
@@ -239,6 +240,7 @@ for blk in exp:
 
         dots_stim = visual.DotStim(
             win,
+            colorSpace="rgb255",
             dotSize=10,
             coherence=my_coherence,
             dotLife=-1,
@@ -251,6 +253,7 @@ for blk in exp:
 
         dots_stim_alt = visual.DotStim(
             win,
+            colorSpace="rgb255",
             dotSize=10,
             coherence=my_coherence,
             dotLife=-1,
