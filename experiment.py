@@ -44,7 +44,7 @@ parameters = {
     "time": {"fix": 0.75, "feedback": 0.75, "iti": 0.5, "pres": 3},
     "keys": ["t", "v"],
     "start_key": "space",
-    "dotsize": 50,
+    "dotsize": 35,
     "ndots": 200,
     "text_size": 35,
     "taskname": {"color": "Farbe", "direction": "Richtung"},
