@@ -10,6 +10,9 @@ source(file = "./prep.R")
 
 table(dat$congruency, dat$transition)
 
+# dat %<>% filter(blk >= 8)
+# dat %>% summarise(mean_RT = mean(rt))
+
 dat %>%
   group_by(blk, congruency) %>%
   summarise(mean_RT = mean(rt))

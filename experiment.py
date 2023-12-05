@@ -28,6 +28,12 @@ equivalent in the direction task.
 estimated duration: 
 (144 * 10 * (0.75 + (0.2 * .75) + 0.5 + 0.5)) / 60
 ~ 45.6 Minutes
+
+UPDATE: since VP 6 took about 3.5 seconds per trial; we have to drastically
+adjust the number of trials.
+
+With 96, we should get ~56 minutes. Since incremental saving is now implemented,
+we'll go ahead with this duration.
 """
 
 from psychopy import visual, event, core
@@ -126,7 +132,7 @@ if vp_info["version"] == "full":
         "nblks": 10,
         "pracblks": 2,
         "nprac": int(2 * min_len),
-        "ntrls": int(9 * min_len),
+        "ntrls": int(6 * min_len),
     }
     parameters["exp_len"] = 12
 elif vp_info["version"] == "test":
@@ -314,6 +320,10 @@ for blk in exp:
                 corr = 2
                 slow = True
 
+        trl["date"] = dt.datetime.now().strftime("%d-%m-%Y-%H:%M:%S")
+        trl["rt"] = rt
+        trl["corr"] = corr
+
         if "escape" in keys:
             break
 
@@ -322,12 +332,12 @@ for blk in exp:
                 fb_stim.draw()
                 win.flip()
 
-        trl["date"] = dt.datetime.now().strftime("%d-%m-%Y-%H:%M:%S")
-        trl["rt"] = rt
-        trl["corr"] = corr
-
         for _ in range(int(parameters["time"]["iti"] * frame_rate)):
             win.flip()
+
+    # Making sure that Results are saved, even if escape is pressed
+    if "escape" in keys:
+        break
 
     # generating end of block feeback
     BlkStim.text = helpers.block_screen(False, blk, parameters, files)
