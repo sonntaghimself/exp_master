@@ -22,3 +22,9 @@ VP 9:
 - Fehler, wenn er nur ein paar Punkte beobachtet hat.
 - Nicht eine Aufgabe als schwieriger wahrgenommen.
 - blaue Punkte manchmal weniger salient als die roten.
+
+VP 10:
+- lang gebraucht für das einarbeiten.
+- nicht immer die Wahnehmung gehabt, etwas richtig gemacht
+- Gegen Ende, kein großer Unterschied zwischen tasks, aber auch wieder rot als
+  salienter wahrgenommen.
