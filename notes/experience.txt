@@ -16,3 +16,9 @@ VP 7:
   geraten.
 - Schwierigkeiten gleich wahrgenommen.
 - Zeitdruck nicht too slow zu bekommen.
+
+VP 9:
+- Manchmal keine Richtung wahrgenommen.
+- Fehler, wenn er nur ein paar Punkte beobachtet hat.
+- Nicht eine Aufgabe als schwieriger wahrgenommen.
+- blaue Punkte manchmal weniger salient als die roten.
