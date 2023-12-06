@@ -132,7 +132,7 @@ if vp_info["version"] == "full":
         "nblks": 10,
         "pracblks": 2,
         "nprac": int(2 * min_len),
-        "ntrls": int(6 * min_len),
+        "ntrls": int(7 * min_len),
     }
     parameters["exp_len"] = 12
 elif vp_info["version"] == "test":
