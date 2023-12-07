@@ -59,7 +59,10 @@ parameters = {
         "direction": {"hard": 0.25, "easy": 0.75},
         "distractor": {"color": 0.90, "direction": 0.8},
     },
-    "color": {"col_1": [5, 137, 255], "col_2": [255, 65, 2]},
+    "color": {
+        "col_1": [5, 137, 255],
+        "col_2": [255, 65, 2],
+    },  # These values are adpated from Kayser et al. (2010)
     # "color": {"col_1": [-1, -1, 1], "col_2": [1, -1, -1]},
     "dir": {"up": 90, "down": 270},
     "dist_dir": {"up": 270, "down": 90},
@@ -94,6 +97,12 @@ stimuli = [
     for difficulty in dif
 ]
 
+"""
+the response mapping is assigned here.
+Following, the correct color names to the corresponding response keys are saved 
+to parameters, to make the instruction generation less of a headache.
+"""
+
 if vp_info["vp_num"] % 2 == 0:
     parameters["cor_resp_col"] = {
         "col_1": parameters["keys"][0],
@@ -125,7 +134,8 @@ for stim in stimuli:
     else:
         stim.append("incongruent")
 
-min_len = len(stimuli)
+
+min_len = len(stimuli)  # how long a block has to be at least for a full stim repetition
 
 if vp_info["version"] == "full":
     parameters["num"] = {
@@ -149,9 +159,6 @@ elif vp_info["version"] == "test":
 ########################
 files = helpers.my_files(vp_info)
 
-# Storing demographics
-# helpers.demographics(vp_info, files)
-
 ########################
 #      Trial Seq       #
 ########################
@@ -165,11 +172,10 @@ inst_text = helpers.read_instructions(files, parameters)
 ########################
 #       Psychopy       #
 ########################
-# win = visual.Window(size=(800, 800), color=(0, 0, 0), units="pix")
 win = visual.Window(color=(0, 0, 0), fullscr=True, units="pix")
 myScreenSizeX = win.size[0]
 myScreenSizeY = win.size[1]
-if win.useRetina:
+if win.useRetina:  # conditionally adjusting for pixel size on Retina
     myScreenSizeX *= 0.5
     myScreenSizeY *= 0.5
 
@@ -178,7 +184,7 @@ frame_rate = win.getActualFrameRate(
     nIdentical=60, nMaxFrames=100, nWarmUpFrames=10, threshold=1
 )
 
-if frame_rate is None:
+if frame_rate is None:  # failsafe for mac.
     frame_rate = 120
 
 timer = core.Clock()
@@ -218,13 +224,13 @@ stim_gen = parameters
 for blk in exp:
     blk = [x for x in blk if x]  # making sure no faulty values are passed through
 
-    if blk[0]["blk"] == 1:
+    if blk[0]["blk"] == 1:  # Instructions for the first block
         for inst in range(1, 3):
             inst_stim.text = inst_text["inst_" + str(inst)]
             inst_stim.draw()
             win.flip()
             event.waitKeys()
-        for inst in range(3, 5):
+        for inst in range(3, 5):  # We combine two files for this screen
             inst_stim.text = inst_text["inst_" + str(inst)]
             if inst < 4:
                 inst_stim.pos = (0, myScreenSizeY / 5)
@@ -235,6 +241,7 @@ for blk in exp:
         event.waitKeys()
 
     BlkStim.text = helpers.block_screen(True, blk, parameters, files)
+    # True as positional argument, when Block Start Screen is needed
     BlkStim.draw()
     win.flip()
     event.waitKeys()
@@ -245,6 +252,17 @@ for blk in exp:
             for item in fix_list:
                 item.draw()
             win.flip()
+
+        """
+        color difficulty manipulation is taken care of through the generation of
+        two identical sets of visual.DotStim stimuli.
+
+        One with the relevant, one with the irrelevant color.
+
+        nStim is therefore determined by the current difficulty.
+
+        for the direction task, the built-in function coherence is used.
+        """
 
         if trl["task"] == "direction":
             n_stim = (
@@ -339,12 +357,12 @@ for blk in exp:
     if "escape" in keys:
         break
 
-    # generating end of block feeback
+    # generating end of block feeback, False is therefore passed as first
+    # positional argument.
     BlkStim.text = helpers.block_screen(False, blk, parameters, files)
     BlkStim.draw()
     win.flip()
     event.waitKeys()
-    # event.waitKeys(keyList=[parameters["start_key"]])
 
     # blank screen for inter-trial-interval
     for _ in range(int(parameters["time"]["iti"] * frame_rate)):
@@ -361,7 +379,7 @@ dataDF.to_csv(files["resfile"], header=True, index=False, sep=",", mode="w")
 
 end_text = "The Experiment is done, thank you for participating"
 
-end_text = end_text + "\n\n may the force be with you."
+# end_text = end_text + "\n\n may the force be with you."
 
 end_text = end_text + "\n\n press any key to end the experiment."
 

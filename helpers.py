@@ -3,6 +3,7 @@ import datetime as dt
 import os
 import random
 import pandas as pd
+import sys
 
 """
 in general, these are all the little worker functions to get my experiment
@@ -57,7 +58,7 @@ def gather_information():
     myDlg.addField("VP Number:", initial=1)
     myDlg.addField("Age:", initial=18, tip="you have to be at least 18")
     myDlg.addField("Gender:", choices=gender)
-    myDlg.addField("Handedness:", choices=["left", "right", "ambidextrous"])
+    myDlg.addField("Handedness:", choices=["right", "left", "ambidextrous"])
     myDlg.addField("version", choices=["full", "test"])
     ok_data = myDlg.show()  # show dialog and wait for OK or Cancel
     check_passed = check_data(ok_data)
@@ -85,7 +86,6 @@ def my_files(vp_info):
     files["insdir"] = files["dirname"] + os.sep + "Instructions"
     files["blkdir"] = files["dirname"] + os.sep + "Block"
     files["resdir"] = files["dirname"] + os.sep + "Results"
-    files["demo"] = files["dirname"] + os.sep + "Demographics"
 
     if not os.path.isdir(files["resdir"]):
         os.makedirs(files["resdir"])
@@ -203,37 +203,6 @@ def randomisation(stimuli, vp_info, parameters, files):
                 stim_blk = [random.choice(stimuli)] + stim_blk_old
 
     return exp
-
-
-########################
-#     demographics     #
-########################
-def demographics(vp_info, files):
-    """this function takes care of storing the demographic data seperately from
-    the other results and anonymises."""
-
-    if not os.path.isdir(files["demo"]):
-        os.makedirs(files["demo"])
-
-    my_file_path = files["demo"] + os.sep + "demographics.csv"
-    df = pd.DataFrame()
-
-    if os.path.isfile(my_file_path):
-        vp_info_cur = pd.read_csv(filepath_or_buffer=my_file_path, index_col=None)
-
-        vp_info_cur = vp_info_cur.to_dict(orient="list")
-        vp_info_cur["age"].append(vp_info["age"])
-        vp_info_cur["gender"].append(vp_info["gender"])
-        vp_info_cur["handedness"].append(vp_info["handedness"])
-    else:
-        vp_info_cur = {
-            "age": [vp_info["age"]],
-            "gender": [vp_info["gender"]],
-            "handedness": [vp_info["handedness"]],
-        }
-
-    df = df.from_dict(vp_info_cur)
-    df.to_csv(my_file_path, header=True, index=False, sep=",", mode="w")
 
 
 ########################
