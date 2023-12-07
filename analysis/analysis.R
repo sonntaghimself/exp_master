@@ -3,23 +3,6 @@ library(ez)
 library(psychReport)
 library(magrittr)
 
-########################
-#     global func      #
-########################
-CongBlock <- function(dat) {
-  datBlk <- dat %>%
-    filter(congruency == "congruent") %>%
-    group_by(blk) %>%
-    summarise(rtCo = mean(rt))
-  datBlk$rtIn <- datEasy %>%
-    filter(congruency == "incongruent") %>%
-    group_by(blk) %>%
-    summarise(rtIn = mean(rt)) %>%
-    select(rtIn)
-  datBlk %<>% mutate(cong = rtIn - rtCo)
-  return(datBlk)
-}
-
 ################################################################################
 #                                only analysis                                 #
 ################################################################################
@@ -27,61 +10,115 @@ source(file = "./prep.R")
 
 table(dat$congruency, dat$transition)
 
-# dat %<>% filter(blk >= 8)
-# dat %>% summarise(mean_RT = mean(rt))
-
 dat %<>% na.omit()
 
+########################
+#     descriptive      #
+########################
+CongBlock((dat %>% filter(task == "color" | difficulty == "easy")))
+# # A tibble: 10 × 4
+#      blk  rtCo rtIn$rtIn cong$rtIn
+#    <int> <dbl>     <dbl>     <dbl>
+#  1     3 0.821     0.895   0.0745
+#  2     4 0.774     0.855   0.0804
+#  3     5 0.769     0.824   0.0544
+#  4     6 0.710     0.776   0.0661
+#  5     7 0.743     0.747   0.00377
+#  6     8 0.728     0.778   0.0500
+#  7     9 0.671     0.682   0.0115
+#  8    10 0.685     0.703   0.0173
+#  9    11 0.693     0.712   0.0188
+# 10    12 0.687     0.719   0.0322
+
+CongBlock((dat %>% filter(task == "color" | difficulty == "hard")))
+# # A tibble: 10 × 4
+#      blk  rtCo rtIn$rtIn cong$rtIn
+#    <int> <dbl>     <dbl>     <dbl>
+#  1     3 0.958     0.997   0.0385
+#  2     4 0.902     0.933   0.0315
+#  3     5 0.886     0.909   0.0225
+#  4     6 0.841     0.892   0.0509
+#  5     7 0.803     0.838   0.0348
+#  6     8 0.825     0.855   0.0297
+#  7     9 0.766     0.768   0.00169
+#  8    10 0.747     0.773   0.0255
+#  9    11 0.760     0.784   0.0234
+# 10    12 0.789     0.797   0.00871
+
+CongBlock((dat %>% filter(task == "direction" | difficulty == "easy")))
+# # A tibble: 10 × 4
+#      blk  rtCo rtIn$rtIn cong$rtIn
+#    <int> <dbl>     <dbl>     <dbl>
+#  1     3 0.877     0.878  0.000687
+#  2     4 0.824     0.845  0.0202
+#  3     5 0.823     0.810 -0.0133
+#  4     6 0.787     0.824  0.0366
+#  5     7 0.766     0.778  0.0119
+#  6     8 0.745     0.775  0.0299
+#  7     9 0.692     0.713  0.0206
+#  8    10 0.702     0.706  0.00420
+#  9    11 0.706     0.744  0.0374
+# 10    12 0.718     0.724  0.00627
+
+CongBlock((dat %>% filter(task == "direction" | difficulty == "hard")))
+# # A tibble: 10 × 4
+#      blk  rtCo rtIn$rtIn cong$rtIn
+#    <int> <dbl>     <dbl>     <dbl>
+#  1     3 0.972     1.01    0.0340
+#  2     4 0.906     0.916   0.00990
+#  3     5 0.901     0.910   0.00982
+#  4     6 0.845     0.880   0.0349
+#  5     7 0.825     0.827   0.00117
+#  6     8 0.830     0.852   0.0225
+#  7     9 0.780     0.768  -0.0111
+#  8    10 0.759     0.762   0.00305
+#  9    11 0.790     0.771  -0.0188
+# 10    12 0.780     0.778  -0.00179
+
 dat %>%
-  # filter(vp_num == 6) %>%
-  group_by(difficulty, transition, congruency) %>%
+  group_by(difficulty, task, congruency) %>%
+  summarise(mean_corr = mean(rt))
+#   difficulty task      congruency  mean_corr
+#   <fct>      <chr>     <fct>           <dbl>
+# 1 easy       color     congruent       0.647
+# 2 easy       color     incongruent     0.714
+# 3 easy       direction congruent       0.680
+# 4 easy       direction incongruent     0.692
+# 5 hard       color     congruent       0.872
+# 6 hard       color     incongruent     0.923
+# 7 hard       direction congruent       0.985
+# 8 hard       direction incongruent     0.952
+
+dat %>%
+  group_by(difficulty, task, congruency) %>%
   summarise(mean_corr = mean(corr))
+#   difficulty task      congruency  mean_corr
+#   <fct>      <chr>     <fct>           <dbl>
+# 1 easy       color     congruent       0.983
+# 2 easy       color     incongruent     0.850
+# 3 easy       direction congruent       0.995
+# 4 easy       direction incongruent     0.949
+# 5 hard       color     congruent       0.932
+# 6 hard       color     incongruent     0.792
+# 7 hard       direction congruent       0.877
+# 8 hard       direction incongruent     0.813
+
+################################################################################
+#                                    Anovas                                    #
+################################################################################
+dat_aov <- dat %>%
+  group_by(vp_num, congruency, transition, difficulty) %>%
+  summarise(meanRT = mean(rt), meanER = mean(corr))
 
 ez::ezANOVA(
-  data = dat, dv = corr, wid = vp_num, within = c(congruency, transition, difficulty)
+  data = dat_aov, dv = meanRT, wid = vp_num, within = c(congruency, transition, difficulty)
 )
-
-datEasy <- dat %>% filter(difficulty == "easy")
-
-CongBlock(dat)
-CongBlock(datEasy)
-
-# for (vpNum in c(6:10)) {
-#   print(vpNum)
-#   CongBlock(datEasy %>% filter(vp_num == vpNum))
-# }
-
-dat_blk <- datEasy %>%
-  filter(congruency == "congruent") %>%
-  group_by(blk) %>%
-  summarise(rt_co = mean(rt))
-
-dat_blk$rt_in <- datEasy %>%
-  filter(congruency == "incongruent") %>%
-  group_by(blk) %>%
-  summarise(rt_in = mean(rt)) %>%
-  select(rt_in)
-
-dat_blk %<>% mutate(cong = rt_in - rt_co)
-dat_blk
-# A tibble: 10 × 4
-#      blk rt_co rt_in$rt_in cong$rt_in
-#    <int> <dbl>       <dbl>      <dbl>
-#  1     3 0.733       0.771    0.0389
-#  2     4 0.695       0.774    0.0799
-#  3     5 0.699       0.724    0.0249
-#  4     6 0.654       0.714    0.0599
-#  5     7 0.695       0.692   -0.00233
-#  6     8 0.645       0.699    0.0538
-#  7     9 0.590       0.627    0.0368
-#  8    10 0.634       0.641    0.00722
-#  9    11 0.624       0.678    0.0539
-# 10    12 0.620       0.655    0.0350
 
 ez::ezANOVA(
-  data = datEasy, dv = rt, wid = vp_num, within = c(congruency, transition)
+  data = dat_aov, dv = meanER, wid = vp_num, within = c(congruency, transition, difficulty)
 )
 
+# NOTE: this is the part where we got a psychReport Error message
 dat_corr %<>%
   group_by(vp_num, congruency, difficulty, transition) %>%
   summarise(rt = mean(rt))
@@ -93,15 +130,6 @@ test_aov <- ez::ezANOVA(
 )
 
 psychReport::aovDispMeans(test_aov)
-
-# old design:
-# ════════════════════════════════════════════ ANOVA:. ════════════════════════════════════════════
-#                 Effect DFn DFd          SSn          SSd         F           p p<.05         ges
-#            (Intercept)   1   4 7.3595303526 0.3992842446 73.727230 0.001010674     * 0.946716545
-#             congruency   1   4 0.0259206804 0.0122296735  8.477963 0.043604154     * 0.058892900
-#             transition   1   4 0.0108401172 0.0020583437 21.065708 0.010108812     * 0.025503040
-#  congruency:transition   1   4 0.0008497399 0.0006395772  5.314385 0.082457508       0.002047262
-# ─────────────────────────────────────────────────────────────────────────────────────────────────
 
 ########################
 #   random analyses    #
