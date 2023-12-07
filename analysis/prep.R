@@ -11,23 +11,19 @@ datFiles <- list.files(
 )
 
 dat <- NULL
-for (f in datFiles) {
-  dat <- rbind(dat, read.table(f, header = TRUE, sep = ","))
-}
+dat <- do.call(rbind, lapply(datFiles, read.table, header = TRUE, sep = ","))
 
 dat %<>% filter(
   practice == "False", transition %in% c("repetition", "switch")
 )
 
 dat_corr <- dat %>% filter(corr == 1)
-
 dat %>% head()
-
+dat$rt <- dat$rt * 1000
 ################################################################################
 #                                  Exclusion                                   #
 ################################################################################
 dat %<>% filter(vp_num != 6 | blk <= 8)
-
 dat %<>% na.omit()
 
 dat$vp_num %<>% as.factor()
@@ -40,14 +36,15 @@ dat$difficulty %<>% as.factor()
 ########################
 CongBlock <- function(dat) {
   datBlk <- dat %>%
-    filter(congruency == "congruent") %>%
-    group_by(blk) %>%
-    summarise(rtCo = mean(rt))
-  datBlk$rtIn <- dat %>%
-    filter(congruency == "incongruent") %>%
-    group_by(blk) %>%
-    summarise(rtIn = mean(rt)) %>%
-    select(rtIn)
-  datBlk %<>% mutate(cong = rtIn - rtCo)
+    group_by(blk, congruency) %>%
+    summarize(
+      rt = mean(rt[corr == 1]), # only correct trials
+      er = mean(corr) * 100
+    ) %>%
+    pivot_wider(names_from = congruency, values_from = c(rt, er)) %>%
+    mutate(
+      rt_effect = rt_incongruent - rt_congruent,
+      er_effect = er_congruent - er_incongruent
+    )
   return(datBlk)
 }
