@@ -3,6 +3,23 @@ library(ez)
 library(psychReport)
 library(magrittr)
 
+########################
+#     global func      #
+########################
+CongBlock <- function(dat) {
+  datBlk <- dat %>%
+    filter(congruency == "congruent") %>%
+    group_by(blk) %>%
+    summarise(rtCo = mean(rt))
+  datBlk$rtIn <- datEasy %>%
+    filter(congruency == "incongruent") %>%
+    group_by(blk) %>%
+    summarise(rtIn = mean(rt)) %>%
+    select(rtIn)
+  datBlk %<>% mutate(cong = rtIn - rtCo)
+  return(datBlk)
+}
+
 ################################################################################
 #                                only analysis                                 #
 ################################################################################
@@ -13,21 +30,71 @@ table(dat$congruency, dat$transition)
 # dat %<>% filter(blk >= 8)
 # dat %>% summarise(mean_RT = mean(rt))
 
-dat %>%
-  group_by(blk, congruency) %>%
-  summarise(mean_RT = mean(rt))
+dat %<>% na.omit()
 
+dat %>%
+  # filter(vp_num == 6) %>%
+  group_by(difficulty, transition, congruency) %>%
+  summarise(mean_corr = mean(corr))
 
 ez::ezANOVA(
-  data = dat, dv = rt, wid = vp_num, within = c(congruency, transition)
+  data = dat, dv = corr, wid = vp_num, within = c(congruency, transition, difficulty)
 )
 
-ez::ezANOVA(
-  data = dat_corr, dv = rt,
-  wid = vp_num, within = c(congruency, transition),
-  detailed = TRUE, return_aov = TRUE
-) %>% psychReport::aovDispTable()
+datEasy <- dat %>% filter(difficulty == "easy")
 
+CongBlock(dat)
+CongBlock(datEasy)
+
+# for (vpNum in c(6:10)) {
+#   print(vpNum)
+#   CongBlock(datEasy %>% filter(vp_num == vpNum))
+# }
+
+dat_blk <- datEasy %>%
+  filter(congruency == "congruent") %>%
+  group_by(blk) %>%
+  summarise(rt_co = mean(rt))
+
+dat_blk$rt_in <- datEasy %>%
+  filter(congruency == "incongruent") %>%
+  group_by(blk) %>%
+  summarise(rt_in = mean(rt)) %>%
+  select(rt_in)
+
+dat_blk %<>% mutate(cong = rt_in - rt_co)
+dat_blk
+# A tibble: 10 × 4
+#      blk rt_co rt_in$rt_in cong$rt_in
+#    <int> <dbl>       <dbl>      <dbl>
+#  1     3 0.733       0.771    0.0389
+#  2     4 0.695       0.774    0.0799
+#  3     5 0.699       0.724    0.0249
+#  4     6 0.654       0.714    0.0599
+#  5     7 0.695       0.692   -0.00233
+#  6     8 0.645       0.699    0.0538
+#  7     9 0.590       0.627    0.0368
+#  8    10 0.634       0.641    0.00722
+#  9    11 0.624       0.678    0.0539
+# 10    12 0.620       0.655    0.0350
+
+ez::ezANOVA(
+  data = datEasy, dv = rt, wid = vp_num, within = c(congruency, transition)
+)
+
+dat_corr %<>%
+  group_by(vp_num, congruency, difficulty, transition) %>%
+  summarise(rt = mean(rt))
+
+test_aov <- ez::ezANOVA(
+  data = dat_corr, dv = rt,
+  wid = vp_num, within = c(congruency, transition, difficulty),
+  detailed = TRUE, return_aov = TRUE
+)
+
+psychReport::aovDispMeans(test_aov)
+
+# old design:
 # ════════════════════════════════════════════ ANOVA:. ════════════════════════════════════════════
 #                 Effect DFn DFd          SSn          SSd         F           p p<.05         ges
 #            (Intercept)   1   4 7.3595303526 0.3992842446 73.727230 0.001010674     * 0.946716545
@@ -41,7 +108,7 @@ ez::ezANOVA(
 ########################
 m.0 <- lm(rt ~ 1, dat)
 m.1 <- lm(rt ~ congruency, dat)
-m.2 <- lm(rt ~ congruency + transition, dat)
+m.2 <- lm(rt ~ congruency + difficulty, dat)
 m.3 <- lm(rt ~ congruency * transition, dat)
 # m.3 <- lm(rt ~ congruency + task + (1 | vp_num), dat)
 

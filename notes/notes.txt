@@ -10,3 +10,6 @@ stimulus:
 Shenhav et al., 2018:
 - only talking about percentages of coherence in both tasks, not the absolute
   values.
+
+VP 6?:
+quit after block 8
